@@ -2,7 +2,7 @@ from pytube import YouTube
 
 def Download(link):
     yt = YouTube(link)
-    youtubeObject = yt.streams.get_highest_resolution()
+    youtube_object = yt.streams.get_highest_resolution()
     captions = yt.captions.get_by_language_code('en')
     
     # TO-DO: pull captions as well
@@ -10,7 +10,7 @@ def Download(link):
     
     success = False
     try:
-        youtubeObject.download()
+        youtube_object.download()
         success = True
         
     except:
