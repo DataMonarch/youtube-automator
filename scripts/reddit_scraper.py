@@ -1,12 +1,12 @@
 import tomli
 import json
+import praw
 
-with open("conf.toml", mode="rb") as fp:
+with open("configs/reddit_config.toml", mode="rb") as fp:
     config = tomli.load(fp)
     CLIENT_ID = config['reddit_oauth']['reddit_client_id']
     CLIENT_SECRET = config['reddit_oauth']['reddit_secret']
 
-import praw
 
 reddit = praw.Reddit(client_id=CLIENT_ID, 
                      client_secret=CLIENT_SECRET,
@@ -35,6 +35,6 @@ for i, submission in enumerate(subreddit.hot(limit=10)):
     print('*' * 20)
  
  
-with open('submissions.json', 'a+') as f:
+with open('../data/submissions_tfr.json', 'a+') as f:
     json.dump(submissions_dict, f)
 # scrape the most liked comment under a thread in a subreddit
