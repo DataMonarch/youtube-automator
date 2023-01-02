@@ -4,7 +4,10 @@ def Download(link):
     yt = YouTube(link)
     youtubeObject = yt.streams.get_highest_resolution()
     captions = yt.captions.get_by_language_code('en')
-    captions = captions.generate_srt_captions()
+    
+    # TO-DO: pull captions as well
+    # captions = captions.generate_srt_captions()
+    
     success = False
     try:
         youtubeObject.download()
