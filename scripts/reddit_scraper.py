@@ -30,18 +30,18 @@ def scrape_subreddit(subreddit_name: str, threads_no_limit=10, skip_n_submission
     """
 
     if not output_file_path:
-        output_file_path = f"submissions_{subreddit_name}"
+        output_file_path = f"../data/submissions_{subreddit_name}.json"
         
     subreddit = reddit.subreddit(subreddit_name)
 
     if os.path.exists(output_file_path):
-        with open("../data/submissions_tfr.json") as f:
+        with open(output_file_path) as f:
             submissions_dict = json.load(f)
     else:
         submissions_dict = {}
         
 
-    for i, submission in enumerate(subreddit.top(limit = skip_n_submission + threads_no_limit)):
+    for i, submission in enumerate(subreddit.hot(limit = skip_n_submission + threads_no_limit)):
         
         if i < skip_n_submission:
             continue
@@ -71,7 +71,7 @@ def scrape_subreddit(subreddit_name: str, threads_no_limit=10, skip_n_submission
                                                     }
                 
                 if verbose:
-                    print(f'>>> Scraped top thread no.{i}: \nTitle:{submission.title}')
+                    print(f'>>> Scraped the hot thread no.{i}: \nTitle:{submission.title}')
                     print('*' * 20)
                 # print(top_comment)
                 
