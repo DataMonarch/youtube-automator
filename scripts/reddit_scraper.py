@@ -29,7 +29,11 @@ def scrape_subreddit(subreddit_name, threads_no_limit=10, skip_n_submission=0,
         submissions_dict = {}
         
 
-    for i, submission in enumerate(subreddit.top(limit = threads_no_limit)):
+    for i, submission in enumerate(subreddit.top(limit = skip_n_submission + threads_no_limit)):
+        
+        if i < skip_n_submission:
+            continue
+        
         # print(f'Hottest thread no.{i}: {submission.title}')
         # get the id of a subreddit submission
         flair = submission.link_flair_text
@@ -41,23 +45,26 @@ def scrape_subreddit(subreddit_name, threads_no_limit=10, skip_n_submission=0,
             if flair.lower() in TFR_FLAIRS:
                 
                 if scraping_level == "comment":
-                    comments = {comment.id: [comment.score, comment.body] for i, comment in enumerate(submission.comments.list()) if i<comments_no_limit}
-               
+                    comments = {comment.id: [comment.score, comment.body] for comment_no, comment in enumerate(submission.comments.list()) if comment_no<comments_no_limit}
+                else:
+                    comments = None
                 # if not comments:
                 #     top_k_comments = None
                 # else:
                 #     top_k_comments = sorted(comments.items(), key=lambda x: x[1][0], reverse=True)[0] 
                 
                 submissions_dict[submission.id] = {'title': submission.title, 
-                                                'flair': flair,
-                                                'top_comment': top_comment}
+                                                    'flair': flair,
+                                                    'body': submission.selftext,
+                                                    'comments': comments, 
+                                                    }
                 # print(top_comment)
                 # print('*' * 20)
     
 
     json_object = json.dumps(submissions_dict, indent=4)
 
-    with open('../data/submissions_tfr.json', 'a+') as f:
+    with open(output_file_path, 'a+') as f:
         f.write(json_object)
     
 # scrape the threads in a subreddit
