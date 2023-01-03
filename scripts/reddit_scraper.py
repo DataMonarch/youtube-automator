@@ -70,6 +70,8 @@ def scrape_subreddit(subreddit_name: str, threads_no_limit=10, skip_n_submission
                 submission_body = submission.selftext
                 submission_body = submission_body.replace('\n', ' ')
                 submission_body = submission_body.replace('\"', '\'')
+                submission_body = submission_body.replace('*', '')
+                submission_body = submission_body.replace('>', '.')
                 submission_title = submission.title
                 submission_title = submission_title.replace('\"', '\'')
                 
