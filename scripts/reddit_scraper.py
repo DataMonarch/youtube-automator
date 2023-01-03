@@ -70,7 +70,9 @@ def scrape_subreddit(subreddit_name: str, threads_no_limit=10, skip_n_submission
                                                     'comments': comments, 
                                                     }
                 
-
+                if verbose:
+                    print(f'>>> Scraped top thread no.{i}: \nTitle:{submission.title}')
+                    print('*' * 20)
                 # print(top_comment)
                 
     
