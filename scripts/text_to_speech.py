@@ -17,6 +17,8 @@ tts = gTTS(text=text, lang='en', slow=False)
 # save the speech to a file
 tts.save(audio_path)
 
-
+audio = AudioSegment.from_mp3(audio_path)
+new_file = speedup(audio, 1.5,150)
+new_file.export("../data/speech_fast.mp3", format="mp3")
 
 # speed up an mp3 file
