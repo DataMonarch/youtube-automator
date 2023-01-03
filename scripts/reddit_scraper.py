@@ -14,8 +14,20 @@ reddit = praw.Reddit(client_id=CLIENT_ID,
                      client_secret=CLIENT_SECRET,
                      user_agent='discussion_scraper')
 
-def scrape_subreddit(subreddit_name, threads_no_limit=10, skip_n_submission=0,
-                     output_file_path=None, scraping_level="thread", comments_no_limit=5):
+def scrape_subreddit(subreddit_name: str, threads_no_limit=10, skip_n_submission=0,
+                     output_file_path=None, scraping_level="thread", comments_no_limit=5, verbose=False) -> None:
+    
+    """
+    Scrapes a subreddit for threads and comments.
+    Inputs:
+    - subreddit_name: name of the subreddit to scrape,
+    - threads_no_limit: number of threads to scrape, default 10, optional,
+    - skip_n_submission: number of threads to skip from the start, default 0, optional,
+    - output_file_path: path to the output file, default None, optional. If None, the output filename will be submissions_{subreddit_name},
+    - scraping_level: indicates level of scraping, default "thread", optional, can be "thread" or "comment",
+    - comments_no_limit: number of comments to scrape, default 5, optional,
+    - verbose: indicates whether to print the scraping progress, default False, optional,
+    """
 
     if not output_file_path:
         output_file_path = f"submissions_{subreddit_name}"
@@ -34,7 +46,6 @@ def scrape_subreddit(subreddit_name, threads_no_limit=10, skip_n_submission=0,
         if i < skip_n_submission:
             continue
         
-        # print(f'Hottest thread no.{i}: {submission.title}')
         # get the id of a subreddit submission
         flair = submission.link_flair_text
         # print(f"Link flair text: {flair}")
@@ -58,8 +69,10 @@ def scrape_subreddit(subreddit_name, threads_no_limit=10, skip_n_submission=0,
                                                     'body': submission.selftext,
                                                     'comments': comments, 
                                                     }
+                
+
                 # print(top_comment)
-                # print('*' * 20)
+                
     
 
     json_object = json.dumps(submissions_dict, indent=4)
