@@ -12,17 +12,16 @@ import pyrubberband as pyrb
 
 # text = data[list(data.keys())[0]]["body"]
 
-# audio_path = "../data/speech.mp3"
+audio_path = "../data/speech.mp3"
+
+# generate speech from the text string
 
 def text_to_speech(text, audio_path):
     
     tts = gTTS(text=text, lang='en', slow=False)
     tts.save(audio_path)
 
-# generate speech from the text string
-# tts = gTTS(text=text, lang='en', slow=False)
-# save the speech to a file
-# tts.save(audio_path)
+
 
 # audio = AudioSegment.from_mp3(audio_path)
 # new_file = speedup(audio, 1.5,150)
