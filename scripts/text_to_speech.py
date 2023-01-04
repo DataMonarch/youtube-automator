@@ -99,3 +99,9 @@ def mp3_to_wav(audio_file_name):
         sound.export(audio_file_name, format="wav")
     return audio_file_name
 
+def wav_to_mp3(audio_file_name):
+    if audio_file_name.split('.')[1] == 'wav':
+        sound = AudioSegment.from_wav(audio_file_name)
+        audio_file_name = audio_file_name.split('.')[0] + '.mp3'
+        sound.export(audio_file_name, format="mp3")
+    return audio_file_name
