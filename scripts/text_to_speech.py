@@ -1,5 +1,6 @@
 from gtts import gTTS
 import os
+import subprocess
 import json
 from pydub import AudioSegment
 from pydub.effects import speedup
@@ -45,8 +46,14 @@ def speed_change(sound:AudioSegment, speed=1.0):
     return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
 
 sound = AudioSegment.from_mp3(audio_path)
-sound = speed_change(sound, speed=1.5)
+# sound = speed_change(sound, speed=1.5)
+sound = sound.speedup(playback_speed=1.5)
 sound.export("../data/speech_faster.mp3", format="mp3")
+# sound.export("../data/speech_faster.mp3", format="mp3")
+
+# convert mp3 to wav
+
+# spedd up audio file
 
 # y, sr = sf.read("../data/file.wav")
 # # Play back at extra low speed
@@ -84,3 +91,11 @@ sound.export("../data/speech_faster.mp3", format="mp3")
 
 # sound = AudioSegment.from_wav("../data/analyzed_filepathXnormal.wav")
 # sound.export("../data/analyzed_filepathXnormal.mp3", format="mp3")
+
+def mp3_to_wav(audio_file_name):
+    if audio_file_name.split('.')[1] == 'mp3':
+        sound = AudioSegment.from_mp3(audio_file_name)
+        audio_file_name = audio_file_name.split('.')[0] + '.wav'
+        sound.export(audio_file_name, format="wav")
+    return audio_file_name
+
