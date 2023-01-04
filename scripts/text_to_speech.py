@@ -4,9 +4,8 @@ import subprocess
 import json
 from pydub import AudioSegment
 from pydub.effects import speedup
-import soundfile as sf
-import pyrubberband as pyrb
 from scipy.io import wavfile
+import numpy as np
 
 # with open("../data/submissions_talesfromtechsupport.json") as json_file:
 #     data = json.load(json_file)
@@ -92,23 +91,24 @@ def speed_change(sound:AudioSegment, speed=1.0):
 # sound.export("../data/analyzed_filepathXnormal.mp3", format="mp3")
 
 def mp3_to_wav(audio_file_name):
-    if audio_file_name.split('.')[1] == 'mp3':
+    if audio_file_name.split('.')[-1] == 'mp3':
         sound = AudioSegment.from_mp3(audio_file_name)
-        audio_file_name = audio_file_name.split('.')[0] + '.wav'
+        audio_file_name = ''.join(audio_file_name.split('.')[:-1]) + '.wav'
         sound.export(audio_file_name, format="wav")
     return audio_file_name
 
+# TO-DO: conversion error: wav - mp3
 def wav_to_mp3(audio_file_name):
-    if audio_file_name.split('.')[1] == 'wav':
+    if audio_file_name.split('.')[-1] == 'wav':
         sound = AudioSegment.from_wav(audio_file_name)
-        audio_file_name = audio_file_name.split('.')[0] + '.mp3'
+        audio_file_name = ''.join(audio_file_name.split('.')[:-1]) + '.mp3'
         sound.export(audio_file_name, format="mp3")
     return audio_file_name
 
 def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
     speech_rate, speech_data = wavfile.read(wav_path)
     
-    out_path = wav_path.split('.')[0] + f"faster" + wav_path.split('.')[1]
+    out_path = ''.join(wav_path.split('.')[:-1]) + f"faster." + wav_path.split('.')[-1]
     wavfile.write(out_path, int(speech_rate*speed_up_ratio), speech_data)
     
     return out_path
@@ -116,19 +116,34 @@ def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
 
 def mp3_resampler(mp3_path: str, speed_up_ratio: float = 1.0) -> str:
     wav_path = mp3_to_wav(mp3_path)
+    print(wav_path)
     faster_wav_path = wav_resampler(wav_path, speed_up_ratio)
+    print(faster_wav_path)
     out_path = wav_to_mp3(faster_wav_path)
     
     return out_path
     
-mp3_path = "../data/speech.mp3"
+# remove silence from a wav file
+    
+def wav_silence_remover(wav_path: str, silence_threshold: int = 125) -> str:
+    speech_rate, speech_data = wavfile.read(wav_path)
+    #identify all samples with an absolute value greater than the threshold
+    greater_index = np.greater(np.absolute(speech_data), silence_threshold)
+    #filter to only include the identified samples
+    above_threshold_data = speech_data[greater_index]
+    out_path = ''.join(wav_path.split('.')[:-1]) + f"silenced_{silence_threshold}." + wav_path.split('.')[-1]
 
-mp3_resampler(mp3_path, speed_up_ratio=1.5)
+    wavfile.write(out_path, speech_rate, above_threshold_data)
+
+mp3_path = "C:/Users/togru/python-playground/yt_automator/data/speech.mp3"
+
+# mp3_resampler(mp3_path, speed_up_ratio=1.5)
+wav_path = mp3_to_wav(mp3_path)
+silenced_wav_path = wav_silence_remover(wav_path)
 
 
 
-	
-	
+
 	
 	
 	
