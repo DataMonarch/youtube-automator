@@ -6,14 +6,13 @@ from pydub import AudioSegment
 from pydub.effects import speedup
 import soundfile as sf
 import pyrubberband as pyrb
-
+from scipy.io import wavfile
 
 # with open("../data/submissions_talesfromtechsupport.json") as json_file:
 #     data = json.load(json_file)
 
 # text = data[list(data.keys())[0]]["body"]
 
-audio_path = "../data/speech.mp3"
 
 # generate speech from the text string
 
@@ -45,10 +44,10 @@ def speed_change(sound:AudioSegment, speed=1.0):
     # know how to play audio at standard frame rate (like 44.1k)
     return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
 
-sound = AudioSegment.from_mp3(audio_path)
-# sound = speed_change(sound, speed=1.5)
-sound = sound.speedup(playback_speed=1.5)
-sound.export("../data/speech_faster.mp3", format="mp3")
+# sound = AudioSegment.from_mp3(audio_path)
+# # sound = speed_change(sound, speed=1.5)
+# sound = sound.speedup(playback_speed=1.5)
+# sound.export("../data/speech_faster.mp3", format="mp3")
 # sound.export("../data/speech_faster.mp3", format="mp3")
 
 # convert mp3 to wav
@@ -105,3 +104,9 @@ def wav_to_mp3(audio_file_name):
         audio_file_name = audio_file_name.split('.')[0] + '.mp3'
         sound.export(audio_file_name, format="mp3")
     return audio_file_name
+
+mp3_path = "../data/speech.mp3"
+wav_path = mp3_to_wav(mp3_path)
+
+speech_rate, speech_data = wavfile.read('wavs/elon_mono.wav')
+
