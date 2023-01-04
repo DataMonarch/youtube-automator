@@ -108,5 +108,106 @@ def wav_to_mp3(audio_file_name):
 mp3_path = "../data/speech.mp3"
 wav_path = mp3_to_wav(mp3_path)
 
-speech_rate, speech_data = wavfile.read('wavs/elon_mono.wav')
 
+def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
+    speech_rate, speech_data = wavfile.read(wav_path)
+    
+    out_path = wav_path.split('.')[0] + f"faster" + wav_path.split('.')[1]
+    wavfile.write(out_path, int(speech_rate*speed_up_ratio), speech_data)
+    
+    return out_path
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
