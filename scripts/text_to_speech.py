@@ -108,7 +108,7 @@ def wav_to_mp3(audio_file_name):
 def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
     speech_rate, speech_data = wavfile.read(wav_path)
     
-    out_path = ''.join(wav_path.split('.')[:-1]) + f"faster." + wav_path.split('.')[-1]
+    out_path = ''.join(wav_path.split('.')[:-1]) + f"_faster." + wav_path.split('.')[-1]
     wavfile.write(out_path, int(speech_rate*speed_up_ratio), speech_data)
     
     return out_path
@@ -131,15 +131,20 @@ def wav_silence_remover(wav_path: str, silence_threshold: int = 125) -> str:
     greater_index = np.greater(np.absolute(speech_data), silence_threshold)
     #filter to only include the identified samples
     above_threshold_data = speech_data[greater_index]
-    out_path = ''.join(wav_path.split('.')[:-1]) + f"silenced_{silence_threshold}." + wav_path.split('.')[-1]
+    out_path = ''.join(wav_path.split('.')[:-1]) + f"_silenced_{silence_threshold}." + wav_path.split('.')[-1]
 
     wavfile.write(out_path, speech_rate, above_threshold_data)
+
+    return out_path
+
 
 mp3_path = "C:/Users/togru/python-playground/yt_automator/data/speech.mp3"
 
 # mp3_resampler(mp3_path, speed_up_ratio=1.5)
 wav_path = mp3_to_wav(mp3_path)
-silenced_wav_path = wav_silence_remover(wav_path)
+silenced_wav_path = wav_silence_remover(wav_path, silence_threshold=50)
+resampled_silenced_wav_path = wav_resampler(silenced_wav_path, speed_up_ratio=1.2)
+print(resampled_silenced_wav_path)
 
 
 
