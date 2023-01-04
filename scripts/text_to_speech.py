@@ -80,6 +80,15 @@ def wav_silence_remover(wav_path: str, silence_threshold: int = 125) -> str:
 
     return out_path
 
+def sfft_audio_stretcher(wav_path, stretch_factor=1.5):
+    audio, speech_rate = librosa.load(wav_path)
+
+    stretched_audio = librosa.effects.time_stretch(audio, rate=stretch_factor)
+    out_path = ''.join(wav_path.split('.')[:-1]) + f"_stretched." + wav_path.split('.')[-1]
+
+    wavfile.write(out_path, speech_rate, stretched_audio)
+    
+    return out_path
 
 mp3_path = "C:/Users/togru/python-playground/yt_automator/data/speech.mp3"
 
