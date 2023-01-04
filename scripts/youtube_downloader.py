@@ -13,16 +13,19 @@ def Download(url: str, save_path: str = '../data/videos'):
     
     youtube_object = yt.streams.get_highest_resolution()
     captions = yt.captions
+    captions_query = query.CaptionQuery(captions=captions)
     
     # TO-DO: pull captions as well
+    video_captions = None
+    print(captions_query.values())
+    for key in list(captions_query.keys()):
+        
+        if "en" in key and "a." not in key:
+            video_captions = captions[key].generate_srt_captions()
+            break
     
-    
-    
-    try:
-        captions = captions['en'].generate_srt_captions()
-    except KeyError:
+    if not video_captions:
         print(f'No English captions found for {video_id}')
-        captions = None
 
     
     success = False
