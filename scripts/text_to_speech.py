@@ -7,12 +7,18 @@ import soundfile as sf
 import pyrubberband as pyrb
 
 
-with open("../data/submissions_talesfromtechsupport.json") as json_file:
-    data = json.load(json_file)
+# with open("../data/submissions_talesfromtechsupport.json") as json_file:
+#     data = json.load(json_file)
 
-text = data[list(data.keys())[0]]["body"]
+# text = data[list(data.keys())[0]]["body"]
 
-audio_path = "../data/speech.mp3"
+# audio_path = "../data/speech.mp3"
+
+def text_to_speech(text, audio_path):
+    
+    tts = gTTS(text=text, lang='en', slow=False)
+    tts.save(audio_path)
+
 # generate speech from the text string
 # tts = gTTS(text=text, lang='en', slow=False)
 # save the speech to a file
