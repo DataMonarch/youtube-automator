@@ -105,10 +105,6 @@ def wav_to_mp3(audio_file_name):
         sound.export(audio_file_name, format="mp3")
     return audio_file_name
 
-mp3_path = "../data/speech.mp3"
-wav_path = mp3_to_wav(mp3_path)
-
-
 def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
     speech_rate, speech_data = wavfile.read(wav_path)
     
@@ -116,7 +112,20 @@ def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
     wavfile.write(out_path, int(speech_rate*speed_up_ratio), speech_data)
     
     return out_path
-	
+
+
+def mp3_resampler(mp3_path: str, speed_up_ratio: float = 1.0) -> str:
+    wav_path = mp3_to_wav(mp3_path)
+    faster_wav_path = wav_resampler(wav_path, speed_up_ratio)
+    out_path = wav_to_mp3(faster_wav_path)
+    
+    return out_path
+    
+mp3_path = "../data/speech.mp3"
+
+mp3_resampler(mp3_path, speed_up_ratio=1.5)
+
+
 
 	
 	
