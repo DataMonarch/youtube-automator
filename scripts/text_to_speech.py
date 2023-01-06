@@ -15,7 +15,15 @@ import numpy as np
 
 # generate speech from the text string
 
-def text_to_speech(text, audio_path):
+def text_to_speech(text: str, audio_path: str):
+
+    """
+    Converts text to speech and saves it to an audio file.
+
+    :param text: Text to be converted to speech.
+    :param audio_path: Path to the audio file.
+    :return: None
+    """
     
     tts = gTTS(text=text, lang='en', slow=False)
     tts.save(audio_path)
