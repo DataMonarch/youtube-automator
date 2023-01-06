@@ -29,7 +29,14 @@ def text_to_speech(text: str, audio_path: str):
     tts.save(audio_path)
 
 
-def speed_change(sound:AudioSegment, speed=1.0):
+def speed_change(sound:AudioSegment, speed: float=1.0):
+    # add docstring for speed_change method    
+    """
+    Multiplies the speed of the sound by the given factor.
+    :param sound: AudioSegment to be sped up.
+    :param speed: speed-up factor.
+    :return: AudioSegment
+    """
     # Manually override the frame_rate. This tells the computer how many
     # samples to play per second
     sound_with_altered_frame_rate = sound._spawn(sound.raw_data, overrides={
@@ -42,6 +49,11 @@ def speed_change(sound:AudioSegment, speed=1.0):
     return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
 
 def mp3_to_wav(audio_file_name):
+    # add docstring for mp3_to_wav
+    """
+    Convert mp3 file to wav format and save it to the same directory.
+    
+    """
     if audio_file_name.split('.')[-1] == 'mp3':
         sound = AudioSegment.from_mp3(audio_file_name)
         audio_file_name = ''.join(audio_file_name.split('.')[:-1]) + '.wav'
