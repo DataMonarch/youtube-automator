@@ -52,7 +52,7 @@ def mp3_to_wav(audio_file_name):
     # add docstring for mp3_to_wav
     """
     Convert mp3 file to wav format and save it to the same directory.
-    
+    :param audio_file_name: name of the audio file to be converted.
     """
     if audio_file_name.split('.')[-1] == 'mp3':
         sound = AudioSegment.from_mp3(audio_file_name)
