@@ -62,6 +62,11 @@ def mp3_to_wav(audio_file_name):
 
 # TO-DO: conversion error: wav - mp3
 def wav_to_mp3(audio_file_name):
+    
+    """
+    Convert wav file to mp3 format and save it to the same directory.
+    :param audio_file_name: name of the audio file to be converted.
+    """
     if audio_file_name.split('.')[-1] == 'wav':
         sound = AudioSegment.from_wav(audio_file_name)
         audio_file_name = ''.join(audio_file_name.split('.')[:-1]) + '.mp3'
