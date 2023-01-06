@@ -74,6 +74,14 @@ def wav_to_mp3(audio_file_name):
     return audio_file_name
 
 def wav_resampler(wav_path: str, speed_up_ratio: float = 1.0) -> str:
+    # generate docstring for this function.
+    """
+    Resample a wav file to a new wav file with a different sampling rate.
+
+    :param wav_path: The path to the wav file to be resampled.
+    :param speed_up_ratio: The ratio of the new sampling rate to the old sampling rate.
+    :return: The path to the resampled wav file.
+    """
     speech_rate, speech_data = wavfile.read(wav_path)
     
     out_path = ''.join(wav_path.split('.')[:-1]) + f"_faster." + wav_path.split('.')[-1]
