@@ -129,7 +129,18 @@ def wav_silence_remover(wav_path: str, silence_threshold: int = 125) -> str:
 
     return out_path
 
-def sfft_audio_stretcher(wav_path, stretch_factor=1.5):
+def sfft_audio_stretcher(wav_path: str, stretch_factor=1.5):
+    """
+    Stretch the audio by a factor of stretch_factor using the SFFT method.
+
+    Args:
+        wav_path (str): path to the wav file to be stretched.
+        stretch_factor (float, optional): the factor by which sound is to be stretched. Defaults to 1.5.
+
+    Returns:
+        str: path of the stretched audio file.
+    """
+    
     audio, speech_rate = librosa.load(wav_path)
 
     stretched_audio = librosa.effects.time_stretch(audio, rate=stretch_factor)
