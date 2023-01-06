@@ -4,6 +4,14 @@ import os
 
 def Download(url: str, save_path: str = '../data/videos'):
     
+    # documentation for the Download method
+    """
+    Download a video from a given URL.
+    Inputs:
+    - url: URL of the video to be downloaded.
+    - save_path: Path to save the downloaded video.
+    """
+    
     save_path = os.path.abspath(save_path)
     yt = YouTube(url)
     video_id = extract.video_id(url)
