@@ -110,6 +110,14 @@ def mp3_resampler(mp3_path: str, speed_up_ratio: float = 1.0) -> str:
 # remove silence from a wav file
     
 def wav_silence_remover(wav_path: str, silence_threshold: int = 125) -> str:
+    """
+    Remove silence from a wav file.
+
+    :param wav_path: path to the wav file
+    :param silence_threshold: silence threshold
+    :return: path to the wav file without silence
+    """
+    
     speech_rate, speech_data = wavfile.read(wav_path)
     #identify all samples with an absolute value greater than the threshold
     greater_index = np.greater(np.absolute(speech_data), silence_threshold)
