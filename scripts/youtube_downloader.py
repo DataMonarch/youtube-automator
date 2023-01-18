@@ -2,8 +2,26 @@ from pytube import YouTube, Search, extract, query
 import random
 import argparse
 import os
+import json
 
-def Download(url: str = None, yt_object: YouTube = None, save_path: str = '../data/videos'):
+def get_srt_captions(yt_object):
+    captions = yt_object.captions
+    captions_query = query.CaptionQuery(captions=captions)
+    
+    # TO-DO: pull captions as well
+    video_captions = None
+    print(captions_query.values())
+    
+    for key in list(captions_query.keys()):
+        
+        if "en" in key and "a." not in key:
+            video_captions = captions[key].generate_srt_captions()
+            break
+    
+ 
+
+def Download(url: str = None, yt_object: YouTube = None, 
+             save_path: str = '../data/videos', json_out_path=None):
     
     # documentation for the Download method
     """
@@ -31,29 +49,31 @@ def Download(url: str = None, yt_object: YouTube = None, save_path: str = '../da
         print('No URL or YouTube object provided.')
         return None
         
+    if not output_file_path:
+        output_file_path = f"../data/videos/scraped_videos.json"
+    
+    if os.path.exists(output_file_path):
+        with open(output_file_path) as f:
+            videos_dict = json.load(f)
+    else:
+        videos_dict = {}
+    
     save_path = os.path.abspath(save_path)
     
     filename = f'{video_id}.mp4'
     file_path  = os.path.join(save_path, filename)
     
     youtube_object = yt.streams.get_highest_resolution()
-    captions = yt.captions
-    captions_query = query.CaptionQuery(captions=captions)
+    video_title = youtube_object.title
     
-    # TO-DO: pull captions as well
-    video_captions = None
-    print(captions_query.values())
+    videos_dict['id'] = video_id
+    videos_dict["title"] = video_title
     
-    # for key in list(captions_query.keys()):
+    video_captions = get_srt_captions(youtube_object)
+    
+    if not video_captions:
+        print(f'No English captions found for {video_id}')
         
-    #     if "en" in key and "a." not in key:
-    #         video_captions = captions[key].generate_srt_captions()
-    #         break
-    
-    # if not video_captions:
-    #     print(f'No English captions found for {video_id}')
-
-    
     success = False
     try:
         youtube_object.download(output_path=save_path, filename=filename)
@@ -61,8 +81,23 @@ def Download(url: str = None, yt_object: YouTube = None, save_path: str = '../da
         print(f'>>> Downloaded {filename} as {file_path}')
     except:
         print(f"! An error has occurred while downloading the video {video_id}")
+    
+    if video_id not in videos_dict.keys():
+    
+        videos_dict[video_id] = {'title': video_title, 
+                                'file_path': file_path,
+                                'captions': video_captions
+                                }
         
-    return success, captions
+        json_object = json.dumps(videos_dict, indent=4)
+
+        with open(output_file_path, 'a+') as f:
+            f.write(json_object)
+            
+    else:
+        print(f"Video {video_id} already exists in the output file")
+            
+    return success
 
 
 def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/videos'):
