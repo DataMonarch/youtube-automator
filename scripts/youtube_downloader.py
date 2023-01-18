@@ -1,19 +1,32 @@
-from pytube import YouTube, extract, query
+from pytube import YouTube, Search, extract, query
 import argparse
 import os
 
-def Download(url: str, save_path: str = '../data/videos'):
+def Download(url: str = None, yt_object: YouTube = None, save_path: str = '../data/videos'):
     
     # documentation for the Download method
     """
     Download a video from a given URL.
-    Inputs:
-    - url: URL of the video to be downloaded.
-    - save_path: Path to save the downloaded video.
+    Parameters
+    ----------
+    url: str
+        URL of the video to be downloaded.
+    save_path: str 
+        Path to save the downloaded video.
+        
+    Returns
+    -------
+    None
     """
-    
+    if yt_object:
+        yt = yt_object
+    elif url:
+        yt = YouTube(url)
+    else:
+        print('No URL or YouTube object provided.')
+        return None
+        
     save_path = os.path.abspath(save_path)
-    yt = YouTube(url)
     video_id = extract.video_id(url)
     
     filename = f'{video_id}.mp4'
@@ -26,6 +39,7 @@ def Download(url: str, save_path: str = '../data/videos'):
     # TO-DO: pull captions as well
     video_captions = None
     print(captions_query.values())
+    
     for key in list(captions_query.keys()):
         
         if "en" in key and "a." not in key:
@@ -46,9 +60,39 @@ def Download(url: str, save_path: str = '../data/videos'):
         
     return success, captions
 
+
+def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/videos'):
+    # write documentation for the search_and_download_top_k method
+    """
+    Searches for the top k videos matching the query and downloads them.
+
+    Parameters
+    ----------
+    query : str
+        The query to search for.
+    k : int
+        The number of videos to download.
+    save_path : str
+        The path to save the downloaded videos.
+
+    Returns
+    -------
+    None
+    """
+    
+    search = Search(query)
+    
+    for i, yt_object in enumerate(search.results):
+        Download(yt_object=yt_object, save_path=save_path)
+        
+        if i == k-1: break
+
+
 # url = input("Enter the url of the video: ")
 # _, captions = Download(url)
 # print(captions)
+
+
 
 # write argument parser to get url from command line or from file
 
@@ -56,6 +100,7 @@ def Download(url: str, save_path: str = '../data/videos'):
 parser = argparse.ArgumentParser()
 parser.add_argument("-l", "--url", help="Enter the url of the video")
 parser.add_argument("-f", "--file", help="Enter the path to the file", default=None)
+
 args = parser.parse_args()
 
 if args.url:
@@ -73,3 +118,6 @@ elif args.file:
 
 else:
     print("Please enter a url or a file name")
+    
+    
+    
