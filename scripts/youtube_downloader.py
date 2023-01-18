@@ -1,4 +1,5 @@
 from pytube import YouTube, Search, extract, query
+import random
 import argparse
 import os
 
@@ -20,14 +21,17 @@ def Download(url: str = None, yt_object: YouTube = None, save_path: str = '../da
     """
     if yt_object:
         yt = yt_object
+        video_id = random.randint(1, 100000)
+
     elif url:
         yt = YouTube(url)
+        video_id = extract.video_id(url)
+        
     else:
         print('No URL or YouTube object provided.')
         return None
         
     save_path = os.path.abspath(save_path)
-    video_id = extract.video_id(url)
     
     filename = f'{video_id}.mp4'
     file_path  = os.path.join(save_path, filename)
@@ -40,14 +44,14 @@ def Download(url: str = None, yt_object: YouTube = None, save_path: str = '../da
     video_captions = None
     print(captions_query.values())
     
-    for key in list(captions_query.keys()):
+    # for key in list(captions_query.keys()):
         
-        if "en" in key and "a." not in key:
-            video_captions = captions[key].generate_srt_captions()
-            break
+    #     if "en" in key and "a." not in key:
+    #         video_captions = captions[key].generate_srt_captions()
+    #         break
     
-    if not video_captions:
-        print(f'No English captions found for {video_id}')
+    # if not video_captions:
+    #     print(f'No English captions found for {video_id}')
 
     
     success = False
