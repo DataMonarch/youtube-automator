@@ -14,12 +14,14 @@ def get_video_id(url):
     return video_id 
   
 # Get the captions of the video from YouTube Data API 
-def get_captions(video_id): 
+def get_srt_captions(video_id): 
 
     # YouTube Data API key  
-    srt = YouTubeTranscriptApi.get_transcript(video_id, LANG_PRIORITY_LIST)
-    
-    return srt
+    try: 
+        srt = YouTubeTranscriptApi.get_transcript(video_id, LANG_PRIORITY_LIST)
+        return srt
+    except:
+        return None
       
 # Driver Code 
 if __name__ == '__main__': 

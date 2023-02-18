@@ -1,6 +1,6 @@
 from pytube import YouTube, Search, extract, query
 import random
-from captions import get_captions
+from captions import get_srt_captions
 import argparse
 import os
 import json
@@ -56,7 +56,7 @@ def Download(url: str = None, yt_object: YouTube = None,
     videos_dict['id'] = video_id
     videos_dict["title"] = video_title
     
-    video_captions = get_srt_captions(youtube_object)
+    video_captions = get_srt_captions(video_id)
     
     if not video_captions:
         print(f'No English captions found for {video_id}')
