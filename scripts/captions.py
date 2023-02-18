@@ -34,5 +34,5 @@ if __name__ == '__main__':
      video_id = get_video_id(url) 
 
      # Get Captions of Video from YouTube Data API  
-     captions = get_captions(video_id)
+     captions = get_srt_captions(video_id)
      print(captions)
