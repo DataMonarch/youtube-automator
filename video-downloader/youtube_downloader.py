@@ -8,14 +8,13 @@ import argparse
 import os
 import json
 
-api_key = 'AIzaSyBMSgZokcqEjPjSJ0VytpPm2PGs-QDxnU0'
 
-def Download(url: str = None, yt_object: YouTube = None, 
+def download(url: str = None, yt_object: YouTube = None, 
              save_path: str = '../data/videos', json_out_path=None):
     
-    # documentation for the Download method
+    # documentation for the download method
     """
-    Download a video from a given URL.
+    download a video from a given URL.
     Parameters
     ----------
     url: str
@@ -68,7 +67,7 @@ def Download(url: str = None, yt_object: YouTube = None,
         try:
             youtube_object.download(output_path=save_path, filename=filename)
             success = True
-            print(f'>>> Downloaded {filename} as {file_path}')
+            print(f'>>> downloaded {filename} as {file_path}')
         except:
             print(f"! An error has occurred while downloading the video {video_id}")
     
@@ -106,23 +105,16 @@ def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/vide
     -------
     None
     """
+    
     search = Search(query)
     
     for i, yt_object in enumerate(search.results):
-        res = Download(yt_object=yt_object, save_path=save_path)
+        res = download(yt_object=yt_object, save_path=save_path)
         if not res:
             print(f"Error while downloading: {yt_object.video_id}\n ! Video downloaded or process terminated with an unexpected error")
         
         if i == k-1: break
 
-
-# url = input("Enter the url of the video: ")
-# _, captions = Download(url)
-# print(captions)
-
-
-
-# write argument parser to get url from command line or from file
 
 
 parser = argparse.ArgumentParser()
@@ -135,7 +127,7 @@ args = parser.parse_args()
 
 if args.url:
     url = args.url
-    _, captions = Download(url)
+    _, captions = download(url)
     print(captions)
 
 elif args.file:
@@ -143,7 +135,7 @@ elif args.file:
     with open(file, 'r') as f:
         for line in f:
             url = line
-            _, captions = Download(url)
+            _, captions = download(url)
             print(captions)
             
 elif args.query:

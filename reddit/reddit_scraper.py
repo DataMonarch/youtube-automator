@@ -3,7 +3,6 @@ import json
 import praw
 import os
 import re
-import sys
 import argparse
 
 
@@ -32,6 +31,7 @@ def scrape_subreddit(subreddit_name: str, num_threads=10,
     - comments_no_limit: number of comments to scrape, default 5, optional,
     - verbose: indicates whether to print the scraping progress, default False, optional,
     """
+    
     with open("configs/reddit_config.toml", mode="rb") as fp:
         config = tomli.load(fp)
         CLIENT_ID = config['reddit_oauth']['reddit_client_id']
@@ -77,14 +77,10 @@ def scrape_subreddit(subreddit_name: str, num_threads=10,
                     comments = {comment.id: [comment.score, comment.body] for comment_no, comment in enumerate(submission.comments.list()) if comment_no<comments_no_limit}
                 else:
                     comments = None
-                # if not comments:
-                #     top_k_comments = None
-                # else:
-                #     top_k_comments = sorted(comments.items(), key=lambda x: x[1][0], reverse=True)[0] 
+
                 submission_body = string_parser(submission.selftext)
                 
                 submission_title = string_parser(submission.title)
-                # submission_title = submission_title.replace('\"', '\'')
                 
                 submissions_dict[submission.id] = {'title': submission_title,
                                                     'flair': flair,
@@ -110,9 +106,6 @@ def scrape_subreddit(subreddit_name: str, num_threads=10,
 
     with open(output_file_path, 'a+') as f:
         f.write(json_object)
-    
-# scrape the threads in a subreddit
-
 
 
 parser = argparse.ArgumentParser(description='Scrape the threads in a subreddit')
