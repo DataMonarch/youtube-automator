@@ -29,18 +29,15 @@ def Download(url: str = None, yt_object: YouTube = None,
     """
     if yt_object:
         yt = yt_object
-        video_id = random.randint(1, 100000)
 
     elif url:
-        yt = YouTube(url)
-        video_id = extract.video_id(url)
-        print()
-
-        
+        yt = YouTube(url)        
     else:
         print('No URL or YouTube object provided.')
         return None
-        
+    
+    video_id = yt.video_id    
+    
     if not json_out_path:
         json_out_path = f"../data/videos/scraped_videos.json"
     
@@ -86,7 +83,7 @@ def Download(url: str = None, yt_object: YouTube = None,
             f.write(json_object)
             
     else:
-        print(f"Video {video_id} already exists in the output file")
+        print(f">>> Video {video_id} already exists in the output file")
             
     return success
 
@@ -112,9 +109,9 @@ def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/vide
     search = Search(query)
     
     for i, yt_object in enumerate(search.results):
-        res = Download(url=video_url, save_path=save_path)
+        res = Download(yt_object=yt_object, save_path=save_path)
         if not res:
-            print(f"Error while downloading: {video_url}\n ! Video downloaded or process terminated with an unexpected error")
+            print(f"Error while downloading: {yt_object.video_id}\n ! Video downloaded or process terminated with an unexpected error")
         
         if i == k-1: break
 
