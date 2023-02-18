@@ -1,7 +1,12 @@
-
-
+from youtube_transcript_api import YouTubeTranscriptApi
 import requests
 import json
+import tomli
+
+with open("configs/yt_configs.toml", mode="rb") as fp:
+    config = tomli.load(fp)
+    LANG_PRIORITY_LIST = config['yt_srt']['lang_priority_list']
+
 
 # Get the video ID from the URL 
 def get_video_id(url): 
@@ -12,30 +17,9 @@ def get_video_id(url):
 def get_captions(video_id): 
 
     # YouTube Data API key  
-    api_key = 'AIzaSyBMSgZokcqEjPjSJ0VytpPm2PGs-QDxnU0'
-
-    # YouTube Data API URL  
-    url = 'https://www.googleapis.com/youtube/v3/captions?part=snippet&videoId=' + video_id + '&key=' + api_key
-
-    # Request to get the captions  
-    response = requests.get(url)
-
-    # Convert response to JSON format  
-    json_data = json.loads(response.text)
-    print(json_data)
-    # Get the captions from JSON data  
-    items = json_data['items']
-
-    # Print all captions of the video  
-    for item in items: 
-        if item["snippet"]["language"] == "en":
-            caption_id = item["id"]
-            break
-        
-    url = f"http://video.google.com/timedtext?lang=en&v={video_id}&fmt=srv3&name&signature&cap_id={caption_id}"
-    captions = requests.get(url).text
+    srt = YouTubeTranscriptApi.get_transcript(video_id, LANG_PRIORITY_LIST)
     
-    return captions
+    return srt
       
 # Driver Code 
 if __name__ == '__main__': 
