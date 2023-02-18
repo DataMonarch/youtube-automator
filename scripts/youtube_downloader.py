@@ -1,24 +1,11 @@
 from pytube import YouTube, Search, extract, query
 import random
+from captions import get_captions
 import argparse
 import os
 import json
 
-def get_srt_captions(yt_object):
-    captions = yt_object.captions
-    captions_query = query.CaptionQuery(captions=captions)
-    
-    # TO-DO: pull captions as well
-    video_captions = None
-    print(captions_query.values())
-    
-    for key in list(captions_query.keys()):
-        
-        if "en" in key and "a." not in key:
-            video_captions = captions[key].generate_srt_captions()
-            break
-    
- 
+
 
 def Download(url: str = None, yt_object: YouTube = None, 
              save_path: str = '../data/videos', json_out_path=None):
