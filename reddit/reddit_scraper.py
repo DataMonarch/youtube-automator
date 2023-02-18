@@ -32,7 +32,7 @@ def scrape_subreddit(subreddit_name: str, num_threads=10,
     - verbose: indicates whether to print the scraping progress, default False, optional,
     """
     
-    with open("configs/reddit_config.toml", mode="rb") as fp:
+    with open("../configs/reddit_config.toml", mode="rb") as fp:
         config = tomli.load(fp)
         CLIENT_ID = config['reddit_oauth']['reddit_client_id']
         CLIENT_SECRET = config['reddit_oauth']['reddit_secret']

@@ -3,7 +3,7 @@ import requests
 import json
 import tomli
 
-with open("configs/yt_config.toml", mode="rb") as fp:
+with open("../configs/yt_config.toml", mode="rb") as fp:
     config = tomli.load(fp)
     LANG_PRIORITY_LIST = config['yt_srt']['lang_priority_list']
 
