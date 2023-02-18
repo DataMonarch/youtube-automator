@@ -43,11 +43,10 @@ def Download(url: str = None, yt_object: YouTube = None,
         json_out_path = f"../data/videos/scraped_videos.json"
     
     if os.path.exists(json_out_path):
-        with open(json_out_path) as f:
+        with open(json_out_path, 'r') as f:
             videos_dict = json.load(f)
     else:
         videos_dict = {}
-    
     save_path = os.path.abspath(save_path)
     
     filename = f'{video_id}.mp4'
@@ -79,7 +78,7 @@ def Download(url: str = None, yt_object: YouTube = None,
         
         json_object = json.dumps(videos_dict, indent=4)
 
-        with open(json_out_path, 'a+') as f:
+        with open(json_out_path, 'w') as f:
             f.write(json_object)
             
     else:
