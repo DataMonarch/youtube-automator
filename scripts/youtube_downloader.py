@@ -109,24 +109,14 @@ def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/vide
     -------
     None
     """
-    youtube = build("youtube", "v3", developerKey=api_key)
+    search = Search(query)
     
-    request = youtube.search().list(
-        part="id",
-        q=query,
-        type="video",
-        maxResults=k 
-    )
-    response = request.execute()
-    
-    for item in response["items"]:
-        video_id = item["id"]["videoId"]
-        video_url = f"https://www.youtube.com/watch?v={video_id}"
-        
+    for i, yt_object in enumerate(search.results):
         res = Download(url=video_url, save_path=save_path)
         if not res:
             print(f"Error while downloading: {video_url}\n ! Video downloaded or process terminated with an unexpected error")
-
+        
+        if i == k-1: break
 
 
 # url = input("Enter the url of the video: ")
