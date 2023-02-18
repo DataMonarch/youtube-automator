@@ -53,15 +53,13 @@ def Download(url: str = None, yt_object: YouTube = None,
     youtube_object = yt.streams.get_highest_resolution()
     video_title = youtube_object.title
     
-    videos_dict['id'] = video_id
-    videos_dict["title"] = video_title
-    
     video_captions = get_srt_captions(video_id)
     
     if not video_captions:
         print(f'No English captions found for {video_id}')
         
     success = False
+    
     try:
         youtube_object.download(output_path=save_path, filename=filename)
         success = True
