@@ -34,6 +34,8 @@ def Download(url: str = None, yt_object: YouTube = None,
     elif url:
         yt = YouTube(url)
         video_id = extract.video_id(url)
+        print()
+
         
     else:
         print('No URL or YouTube object provided.')
