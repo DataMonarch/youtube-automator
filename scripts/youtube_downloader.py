@@ -1,11 +1,14 @@
 from pytube import YouTube, Search, extract, query
 import random
 from captions import get_srt_captions
+
+import google.auth
+from googleapiclient.discovery import build
 import argparse
 import os
 import json
 
-
+api_key = 'AIzaSyBMSgZokcqEjPjSJ0VytpPm2PGs-QDxnU0'
 
 def Download(url: str = None, yt_object: YouTube = None, 
              save_path: str = '../data/videos', json_out_path=None):
@@ -36,11 +39,11 @@ def Download(url: str = None, yt_object: YouTube = None,
         print('No URL or YouTube object provided.')
         return None
         
-    if not output_file_path:
-        output_file_path = f"../data/videos/scraped_videos.json"
+    if not json_out_path:
+        json_out_path = f"../data/videos/scraped_videos.json"
     
-    if os.path.exists(output_file_path):
-        with open(output_file_path) as f:
+    if os.path.exists(json_out_path):
+        with open(json_out_path) as f:
             videos_dict = json.load(f)
     else:
         videos_dict = {}
@@ -76,7 +79,7 @@ def Download(url: str = None, yt_object: YouTube = None,
         
         json_object = json.dumps(videos_dict, indent=4)
 
-        with open(output_file_path, 'a+') as f:
+        with open(json_out_path, 'a+') as f:
             f.write(json_object)
             
     else:
@@ -103,13 +106,22 @@ def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/vide
     -------
     None
     """
+    youtube = build("youtube", "v3", developerKey=api_key)
     
-    search = Search(query)
+    request = youtube.search().list(
+        part="id",
+        q=query,
+        type="video",
+        maxResults=k 
+    )
+    response = request.execute()
     
-    for i, yt_object in enumerate(search.results):
-        Download(yt_object=yt_object, save_path=save_path)
+    for item in response["items"]:
+        video_id = item["id"]["videoId"]
+        video_url = f"https://www.youtube.com/watch?v={video_id}"
         
-        if i == k-1: break
+        Download(url=video_url, save_path=save_path)
+
 
 
 # url = input("Enter the url of the video: ")
