@@ -62,14 +62,16 @@ def Download(url: str = None, yt_object: YouTube = None,
         
     success = False
     
-    try:
-        youtube_object.download(output_path=save_path, filename=filename)
-        success = True
-        print(f'>>> Downloaded {filename} as {file_path}')
-    except:
-        print(f"! An error has occurred while downloading the video {video_id}")
+
     
     if video_id not in videos_dict.keys():
+    
+        try:
+            youtube_object.download(output_path=save_path, filename=filename)
+            success = True
+            print(f'>>> Downloaded {filename} as {file_path}')
+        except:
+            print(f"! An error has occurred while downloading the video {video_id}")
     
         videos_dict[video_id] = {'title': video_title, 
                                 'file_path': file_path,
@@ -119,7 +121,9 @@ def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/vide
         video_id = item["id"]["videoId"]
         video_url = f"https://www.youtube.com/watch?v={video_id}"
         
-        Download(url=video_url, save_path=save_path)
+        res = Download(url=video_url, save_path=save_path)
+        if not res:
+            print(f"Error while downloading: {video_url}\n ! Video downloaded or process terminated with an unexpected error")
 
 
 
