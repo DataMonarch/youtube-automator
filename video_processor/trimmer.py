@@ -65,10 +65,9 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     for i in range(1, len(trimmed_video_srt)-1):
         end_prev_caption = trimmed_video_srt.iloc[i-1]['start'] - initial_start_time + trimmed_video_srt.iloc[i-1]['duration']
         start_curr_caption = trimmed_video_srt.iloc[i]['start'] - initial_start_time
-        duration_curr_caption = trimmed_video_srt.iloc[i]['duration']
         # end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
         start_next_caption = trimmed_video_srt.iloc[i+1]['start'] - initial_start_time
-        end_curr_caption = start_next_caption - 0.001
+        end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
         
         text = ""
         
@@ -81,15 +80,13 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         #     text += trimmed_video_srt.iloc[i+1]['text']            
         
         print(f"text's length: {len(text)}")
-        # caption_clip = mp.TextClip(text, fontsize=23, color='black', method="caption", size=video_clip.size, align="South", bg_color='white', transparent=False).set_start(start_curr_caption).set_end(end_curr_caption)
-        caption_clip = mp.TextClip(text, fontsize=23, color='black', method="caption", size=video_clip.size, align="South", bg_color='white', transparent=False).set_duration(duration_curr_caption)
+        caption_clip = mp.TextClip(text, fontsize=23, color='black', method="caption", size=video_clip.size, align="South", bg_color='white', transparent=False).set_start(start_curr_caption).set_end(end_curr_caption)
         print(caption_clip.size)
         caption_clips.append(caption_clip)
         print(f"INFO: caption {i} set. Start time: {start_curr_caption}")
         
     print(len(caption_clips))
-    # captions = clips_array([caption_clips], bg_color="transparent")
-    captions = mp.concatenate_videoclips([caption_clips])
+    captions = clips_array([caption_clips], bg_color="transparent")
     composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(("center", "bottom"))], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
     
     return composite_clip
