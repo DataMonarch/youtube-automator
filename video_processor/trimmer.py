@@ -30,6 +30,16 @@ def get_trimmed_video_srt(video_id: str, start_time: float) -> pd.DataFrame:
 
 
 def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
+    """Change the aspect ratio of a video.
+
+    Args:
+        video (VideoFileClip): The video to be changed.
+        new_aspect_ratio (float) : The new aspect ratio of the video. Default is 9/16.
+
+    Returns
+        VideoFileClip: The video with the new aspect ratio.
+    """
+    
     # Determine the aspect ratio of the input video
     curr_aspect_ratio = video.aspect_ratio
         
@@ -59,7 +69,7 @@ def get_video_clip(video_id: str, start_time: float =None):
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
-    
+    subclip = change_aspect_ratio(subclip)
     
     
     # check for the existence of the output directory
