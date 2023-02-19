@@ -55,24 +55,36 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
 
 def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     caption_clips = []
-    start_time_original = trimmed_video_srt.iloc[0]['start']
     trimmed_video_srt.reset_index(inplace=True)
+    start_time_original = trimmed_video_srt.iloc[0]['start']
     clip_end = video_clip.end
     print(clip_end)
     print(len(trimmed_video_srt))
     
-    for i, row in trimmed_video_srt.iterrows():
-        start_time = row['start'] - start_time_original
+    for i in range(1, len(trimmed_video_srt)):
+        # end_prev_caption = trimmed_video_srt.iloc[i-1]['start'] - start_time_original + trimmed_video_srt.iloc[i-1]['duration']
+        start_curr_caption = trimmed_video_srt.iloc[i]['start'] - start_time_original
+        duration_curr_caption = trimmed_video_srt.iloc[i]['duration']
+        # start_next_caption = trimmed_video_srt.iloc[i+1]['start'] - start_time_original
         
-        if i < (len(trimmed_video_srt) - 1):
-            end_time = trimmed_video_srt.iloc[i+1]['start'] - start_time_original
-            text = row['text']
-            caption_clip = mp.TextClip(text, fontsize=40, color='black', bg_color='white', transparent=False).set_start(start_time).set_end(end_time)
-            caption_clips.append(caption_clip)
-            print(f"INFO: caption {i} set. Start time: {start_time} End time: {end_time}")
-    
+        text = ""
+        
+        # if start_curr_caption < end_prev_caption:
+        #     text += trimmed_video_srt.iloc[i-1]['text']
+            
+        text += " " + trimmed_video_srt.iloc[i]['text']
+        
+        # if end_curr_caption > start_next_caption:
+        #     text += trimmed_video_srt.iloc[i+1]['text']            
+        
+ 
+        caption_clip = mp.TextClip(text, fontsize=40, color='black', bg_color='white', transparent=False).set_start(start_curr_caption).set_pos('center').set_duration(duration_curr_caption)
+        caption_clips.append(caption_clip)
+        print(f"INFO: caption {i} set. Start time: {start_curr_caption}")
+        
+    print(len(caption_clips))
     captions = clips_array([caption_clips])
-    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(("center", "bottom"))])
+    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos((20, 800))])
     
     return composite_clip
 
@@ -90,7 +102,7 @@ def get_video_clip(video_id: str, start_time: float =None):
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     subclip = change_aspect_ratio(subclip)
-    # subclip = add_captions(subclip, trimmed_video_srt)
+    subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
     output_dir = "../data/videos/output"
