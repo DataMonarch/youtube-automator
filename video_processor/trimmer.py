@@ -50,11 +50,10 @@ def get_video_clip(video_id: str, start_time: float =None):
         
     # If the aspect ratio is less than 9:16 (portrait), add black bars to the top and bottom
     if aspect_ratio > 9 / 16:
-        subclip = subclip.resize(width=height)
-        curr_width, curr_height = subclip.size
-        bar_heigth = int((int(height * 16 / 9) - curr_height) / 2)
-         
-        subclip = subclip.margin(top=bar_heigth, bottom=bar_heigth)
+        subclip = subclip.resize(0.5)
+        bar_height = int((int(width * 16 / 9) - height) / 2)
+        subclip = subclip.margin(left=0, right=0, top=bar_height, bottom=bar_height)
+        
         # subclip = subclip.set_duration(subclip.duration)
     
     # check for the existence of the output directory
