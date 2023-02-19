@@ -55,15 +55,18 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
 
 def add_captions(video_clip, trimmed_video_srt):
     caption_clips = []
+    start_time_original = trimmed_video_srt.iloc[0]['start']
+    
     for _, row in trimmed_video_srt.iterrows():
-        start_time = row['start']
+        print(row)
+        start_time = row['start'] - start_time_original
         end_time = start_time + row['duration']
         text = row['text']
-        caption_clip = mp.TextClip(text, fontsize=24, color='black', bg_color='white').set_start(start_time).set_end(end_time)
+        caption_clip = mp.TextClip(text, fontsize=40, color='black', bg_color='white', transparent=False).set_start(start_time).set_end(end_time)
         caption_clips.append(caption_clip)
     
     captions = clips_array([caption_clips])
-    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(('center', 'bottom'))])
+    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos((0.05,0.7), relative=True)])
     
     return composite_clip
 
