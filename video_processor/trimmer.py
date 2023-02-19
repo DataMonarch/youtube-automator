@@ -5,7 +5,6 @@ import numpy as np
 import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.VideoClip import CompositeVideoClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
 
 with open('../configs/yt_config.toml') as f:
@@ -64,7 +63,7 @@ def add_captions(video_clip, trimmed_video_srt):
         caption_clips.append(caption_clip)
     
     captions = clips_array([caption_clips])
-    composite_clip = CompositeVideoClip([video_clip, captions.set_pos(('center', 'bottom'))])
+    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(('center', 'bottom'))])
     
     return composite_clip
 
