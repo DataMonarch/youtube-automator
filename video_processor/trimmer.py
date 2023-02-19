@@ -5,7 +5,8 @@ import numpy as np
 import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.VideoClip import ColorClip
+from moviepy.video.VideoClip import CompositeVideoClip
+from moviepy.video.compositing.CompositeVideoClip import clips_array
 
 with open('../configs/yt_config.toml') as f:
     config = toml.load(f)
@@ -53,6 +54,19 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
         
         return video
 
+def add_captions(video_clip, trimmed_video_srt):
+    caption_clips = []
+    for _, row in trimmed_video_srt.iterrows():
+        start_time = row['start']
+        end_time = start_time + row['duration']
+        text = row['text']
+        caption_clip = mp.TextClip(text, fontsize=24, color='black', bg_color='white').set_start(start_time).set_end(end_time)
+        caption_clips.append(caption_clip)
+    
+    captions = clips_array([caption_clips])
+    composite_clip = CompositeVideoClip([video_clip, captions.set_pos(('center', 'bottom'))])
+    
+    return composite_clip
 
 def get_video_clip(video_id: str, start_time: float =None):
     
@@ -64,12 +78,11 @@ def get_video_clip(video_id: str, start_time: float =None):
     # create a VideoFileClip object
     video_path = videos_dict[video_id]["file_path"]
     video = VideoFileClip(video_path)   
-    print(type(video)) 
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     subclip = change_aspect_ratio(subclip)
-    
+    subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
     output_dir = "../data/videos/output"
