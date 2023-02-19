@@ -6,7 +6,7 @@ import cv2
 import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+from moviepy.video.VideoClip import ColorClip
 
 with open('../configs/yt_config.toml') as f:
     config = toml.load(f)
@@ -44,6 +44,8 @@ def get_video_clip(video_id: str, start_time: float =None):
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     
+
+    
     # check for the existence of the output directory
     output_dir = "../data/videos/output"
     if not os.path.exists(output_dir):
@@ -53,8 +55,7 @@ def get_video_clip(video_id: str, start_time: float =None):
     output_path = os.path.join(output_dir, video_id + str(start_time) + ".mp4")  
     
     # extract the trimmed video and preserve the audio
-    ffmpeg_extract_subclip(video_path, start_time, end_time, targetname=output_path)
+    subclip.write_videofile(output_path, audio=True)
+    
     print(f">>> A new video clip is created: {output_path}")
     
-    
-get_video_clip("iMyB_8eWfak")
