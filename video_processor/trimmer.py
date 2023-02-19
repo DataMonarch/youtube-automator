@@ -84,7 +84,7 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         
     print(len(caption_clips))
     captions = clips_array([caption_clips])
-    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos((20, 800))])
+    composite_clip = mp.CompositeVideoClip([video_clip, captions])
     
     return composite_clip
 
