@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 import cv2
 import os
+import moviepy.editor as mp
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 
 with open('../configs/yt_config.toml') as f:
     config = toml.load(f)
@@ -24,10 +27,6 @@ def get_trimmed_video_srt(video_id: str, start_time: float) -> pd.DataFrame:
         start_time = np.random.choice(frame_start_list)
 
     trimmed_video_srt = srt_df[(srt_df["start"] >= start_time) & (srt_df["start"] <= start_time + SHORT_VIDEO_LENTGTH)]
-        
-    
-    # extract a 60 seconds long video clip from the video
-
     return trimmed_video_srt
 
 
@@ -38,45 +37,24 @@ def get_video_clip(video_id: str, start_time: float =None):
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
     
+    # create a VideoFileClip object
     video_path = videos_dict[video_id]["file_path"]
-    
-    video = cv2.VideoCapture(video_path) 
-  
-    # Find the frame rate of the video 
-    fps = int(video.get(cv2.CAP_PROP_FPS)) 
-    
-    # Calculate the start and end frames 
-    start_frame = int(start_time * fps)  
-    end_frame = int(end_time * fps)  
+    video = VideoFileClip(video_path)    
 
-    # Create an output video file with fourcc codec  
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')  
-
-    # Create a VideoWriter object to save the output video file
+    # set the start and end time
+    subclip = video.subclip(start_time, end_time)
+    
+    # check for the existence of the output directory
     output_dir = "../data/videos/output"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
+    # set the output path
     output_path = os.path.join(output_dir, video_id + str(start_time) + ".mp4")  
-    out = cv2.VideoWriter(output_path, fourcc, fps, (1280, 720))
-    # trim the video using cv2 based on the start and end time of the video clip preserving the auido
     
-    ret = True
-    frame_no = 0
-    while ret:
-        ret, frame = video.read()  
-        
-        if ret:
-            if frame_no >= start_frame and frame_no <= end_frame:
-                out.write(frame)
-            
-            elif frame_no > end_frame:
-                break
-        frame_no += 1
-    
-    video.release()
+    # extract the trimmed video and preserve the audio
+    ffmpeg_extract_subclip(video_path, start_time, end_time, targetname=output_path)
     print(f">>> A new video clip is created: {output_path}")
-    out.release()
     
     
 get_video_clip("iMyB_8eWfak")
