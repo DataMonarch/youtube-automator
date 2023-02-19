@@ -2,7 +2,6 @@ import json
 import toml
 import pandas as pd
 import numpy as np
-import cv2
 import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
@@ -30,6 +29,22 @@ def get_trimmed_video_srt(video_id: str, start_time: float) -> pd.DataFrame:
     return trimmed_video_srt
 
 
+def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
+    # Determine the aspect ratio of the input video
+    curr_aspect_ratio = video.aspect_ratio
+        
+    # If the aspect ratio is greater than the indicated ratio (e.g. 9:16 portrait), add black bars to the top and bottom
+    if curr_aspect_ratio > new_aspect_ratio: # reverse as in MP aspect ratio is width / height
+        video = video.resize(0.5)
+        width, height = video.size
+        
+        bar_height = int((int(width * (1 / new_aspect_ratio)) - height) / 2)
+        video = video.margin(left=0, right=0, top=bar_height, bottom=bar_height)
+        
+        # subclip = subclip.set_duration(subclip.duration)
+        return video
+
+
 def get_video_clip(video_id: str, start_time: float =None):
     
     trimmed_video_srt = get_trimmed_video_srt(video_id, start_time)
@@ -39,22 +54,13 @@ def get_video_clip(video_id: str, start_time: float =None):
     
     # create a VideoFileClip object
     video_path = videos_dict[video_id]["file_path"]
-    video = VideoFileClip(video_path)    
+    video = VideoFileClip(video_path)   
+    print(type(video)) 
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     
-    # Determine the aspect ratio of the input video
-    width, height = subclip.size
-    aspect_ratio = subclip.aspect_ratio
-        
-    # If the aspect ratio is less than 9:16 (portrait), add black bars to the top and bottom
-    if aspect_ratio > 9 / 16:
-        subclip = subclip.resize(0.5)
-        bar_height = int((int(width * 16 / 9) - height) / 2)
-        subclip = subclip.margin(left=0, right=0, top=bar_height, bottom=bar_height)
-        
-        # subclip = subclip.set_duration(subclip.duration)
+    
     
     # check for the existence of the output directory
     output_dir = "../data/videos/output"
