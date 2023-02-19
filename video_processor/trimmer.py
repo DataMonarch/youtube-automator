@@ -44,7 +44,17 @@ def get_video_clip(video_id: str, start_time: float =None):
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     
-
+    # Determine the aspect ratio of the input video
+    width, height = subclip.size
+    aspect_ratio = width / height
+    
+    # If the aspect ratio is less than 9:16 (portrait), add black bars to the top and bottom
+    if aspect_ratio < 9 / 16:
+        new_height = int(width * (16 / 9))
+        # black_bars = ColorClip((width, new_height), color=(0, 0, 0))
+        subclip = subclip.resize(height=new_height).set_position(("center", "top"))
+        subclip = subclip.set_position((0, (new_height - height) // 2))
+        subclip = subclip.set_duration(subclip.duration)
     
     # check for the existence of the output directory
     output_dir = "../data/videos/output"
