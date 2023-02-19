@@ -34,6 +34,7 @@ def get_trimmed_video_srt(video_id: str, start_time: float) -> pd.DataFrame:
 def get_video_clip(video_id: str, start_time: float =None):
     
     trimmed_video_srt = get_trimmed_video_srt(video_id, start_time)
+    print(">> generated SRT for the clip")
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
     
@@ -58,7 +59,7 @@ def get_video_clip(video_id: str, start_time: float =None):
         
     output_path = os.path.join(output_dir, video_id + str(start_time) + ".mp4")  
     out = cv2.VideoWriter(output_path, fourcc, fps, (1280, 720))
-    # trim the video using cv2 based on the start and end time of the video clip
+    # trim the video using cv2 based on the start and end time of the video clip preserving the auido
     
     ret = True
     frame_no = 0
@@ -71,8 +72,11 @@ def get_video_clip(video_id: str, start_time: float =None):
             
             elif frame_no > end_frame:
                 break
+        frame_no += 1
     
     video.release()
     print(f">>> A new video clip is created: {output_path}")
     out.release()
     
+    
+get_video_clip("iMyB_8eWfak")
