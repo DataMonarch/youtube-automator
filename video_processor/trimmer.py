@@ -51,7 +51,6 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
         bar_height = int((int(width * (1 / new_aspect_ratio)) - height) / 2)
         video = video.margin(left=0, right=0, top=bar_height, bottom=bar_height)
         
-        # subclip = subclip.set_duration(subclip.duration)
         return video
 
 
