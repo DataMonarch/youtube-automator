@@ -86,7 +86,7 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         print(f"INFO: caption {i} set. Start time: {start_curr_caption}")
         
     print(len(caption_clips))
-    captions = clips_array([caption_clips], bg_color="transparent")
+    captions = clips_array([caption_clips], bg_color="transparent")x
     composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(("center", "bottom"))], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
     
     return composite_clip
