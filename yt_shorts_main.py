@@ -9,7 +9,7 @@ args = parser.parse_args()
 
 
 video_id = args.video_id
-count = args.count
+count = int(args.count)
 
 for i in range(count):
     trimmer.get_video_clip(video_id)

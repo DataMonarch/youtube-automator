@@ -94,7 +94,7 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
 def get_video_clip(video_id: str, start_time: float =None):
     
     trimmed_video_srt = get_trimmed_video_srt(video_id, start_time)
-    print(trimmed_video_srt.head())
+    
     print(">> generated SRT for the clip")
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
@@ -109,7 +109,8 @@ def get_video_clip(video_id: str, start_time: float =None):
     # subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
-    output_dir = "../data/videos/output"
+    output_dir = os.path.join("../data/videos/output", video_id + str(start_time))
+    
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
@@ -118,6 +119,10 @@ def get_video_clip(video_id: str, start_time: float =None):
     
     # extract the trimmed video and preserve the audio
     subclip.write_videofile(output_path, audio=True)
+    
+    # save the srt file in the output directory
+    csv_filename = os.path.join(output_dir, video_id + str(start_time) + ".csv")
+    trimmed_video_srt.to_csv(csv_filename, index=False)
     
     print(f">>> A new video clip is created: {output_path}")
     
