@@ -135,7 +135,6 @@ elif args.file:
         for line in f:
             url = line
             ret = download(url)
-            print(captions)
             
 elif args.query:
     search_and_download_top_k(args.query, int(args.count))

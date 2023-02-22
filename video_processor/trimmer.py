@@ -106,7 +106,7 @@ def get_video_clip(video_id: str, start_time: float =None):
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     subclip = change_aspect_ratio(subclip)
-    subclip = add_captions(subclip, trimmed_video_srt)
+    # subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
     output_dir = "../data/videos/output"
