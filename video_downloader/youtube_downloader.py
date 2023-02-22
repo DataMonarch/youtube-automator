@@ -127,15 +127,14 @@ args = parser.parse_args()
 
 if args.url:
     url = args.url
-    _, captions = download(url)
-    print(captions)
+    ret = download(url)
 
 elif args.file:
     file = args.file
     with open(file, 'r') as f:
         for line in f:
             url = line
-            _, captions = download(url)
+            ret = download(url)
             print(captions)
             
 elif args.query:
