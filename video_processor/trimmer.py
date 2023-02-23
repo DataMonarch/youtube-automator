@@ -6,7 +6,7 @@ import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from video_processor.editor import change_aspect_ratio
+from editor import change_aspect_ratio
 
 
 with open('../configs/yt_config.toml') as f:

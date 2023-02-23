@@ -8,7 +8,13 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
 
 
-def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
+def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> VideoFileClip:
+    width, height = video.size
+    video = video.resize(bg_size)
+    
+    return video
+
+def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) -> VideoFileClip:
     """Change the aspect ratio of a video.
 
     Args:
@@ -28,6 +34,10 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16):
         width, height = video.size
         
         bar_height = int((int(width * (1 / new_aspect_ratio)) - height) / 2)
-        video = video.margin(left=0, right=0, top=bar_height, bottom=bar_height)
+        video_new_ar = video.margin(left=0, right=0, top=bar_height, bottom=bar_height)
         
-        return video
+        bg_size = video_new_ar.size
+        bg_video = add_self_as_bg(video_new_ar, bg_size)
+        
+        return bg_video
+    
