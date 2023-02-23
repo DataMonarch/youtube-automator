@@ -12,8 +12,20 @@ def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> 
     bg_w, bg_h = bg_size
     video_w, video_h = video.size
     
+    # To-Do: use ratios to compute the crop size
     # video = video.crop(width = bg_w, height = bg_h, x_center = int(video_w/2), y_center = int(video_h / 2))
     x_start, y_start = (video_w - bg_w) // 2, (video_h - bg_h) // 2
+    
+    if x_start < 0:
+        x_start = 0
+        
+    if y_start < 0:
+        y_start = 0
+        
+    x_end, y_end = x_start + bg_w, y_start + bg_h
+    
+    if x_end - x > 
+    
     video_cropped = video.crop(x1 = x_start, y1 = y_start, 
                        x2 = x_start + bg_w, y2 = y_start + bg_h)
     
@@ -37,15 +49,17 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
         
     # If the aspect ratio is greater than the indicated ratio (e.g. 9:16 portrait), add black bars to the top and bottom
     if curr_aspect_ratio > new_aspect_ratio: # reverse as in MP aspect ratio is width / height
+        video_cpy = video.copy()
         video = video.resize(0.5)
+        
         width, height = video.size
         
         bar_height = int((int(width * (1 / new_aspect_ratio)) - height) / 2)
         video_new_ar = video.margin(left=0, right=0, top=bar_height, bottom=bar_height)
         
         bg_size = video_new_ar.size
-        bg_video = add_self_as_bg(video, bg_size)
-        print(f"New size of the video: {bg_video.size[0]} x {bg_video.size[1]}")
+        bg_video = add_self_as_bg(video_cpy, bg_size)
+        print(f"Size of the bg video: {bg_video.size[0]} x {bg_video.size[1]}")
 
         return bg_video
     
