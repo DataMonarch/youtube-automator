@@ -9,8 +9,11 @@ from moviepy.video.compositing.CompositeVideoClip import clips_array
 
 
 def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> VideoFileClip:
-    width, height = video.size
-    video = video.resize(bg_size)
+    bg_w, bg_h = bg_size
+    video_w, video_h = video.size
+    
+    video = video.crop(width = bg_w, height = bg_h, x_center = int(video_w/2), y_center = int(video_h / 2))
+    # video = video.crop(width = bg_w, height = bg_h, x1 = int((video_w - bg_w) / 2), y1 = 0)
     
     return video
 
@@ -37,7 +40,7 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
         video_new_ar = video.margin(left=0, right=0, top=bar_height, bottom=bar_height)
         
         bg_size = video_new_ar.size
-        bg_video = add_self_as_bg(video_new_ar, bg_size)
+        bg_video = add_self_as_bg(video, bg_size)
         
         return bg_video
     
