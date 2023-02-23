@@ -24,7 +24,7 @@ def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> 
         
     x_end, y_end = x_start + bg_w, y_start + bg_h
     
-    if x_end - x > 
+    # if x_end - x > 
     
     video_cropped = video.crop(x1 = x_start, y1 = y_start, 
                        x2 = x_start + bg_w, y2 = y_start + bg_h)
@@ -61,5 +61,5 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
         bg_video = add_self_as_bg(video_cpy, bg_size)
         print(f"Size of the bg video: {bg_video.size[0]} x {bg_video.size[1]}")
 
-        return bg_video
+        return video_new_ar
     
