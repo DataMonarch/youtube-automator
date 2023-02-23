@@ -12,8 +12,10 @@ def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> 
     bg_w, bg_h = bg_size
     video_w, video_h = video.size
     
-    video = video.crop(width = bg_w, height = bg_h, x_center = int(video_w/2), y_center = int(video_h / 2))
-    # video = video.crop(width = bg_w, height = bg_h, x1 = int((video_w - bg_w) / 2), y1 = 0)
+    # video = video.crop(width = bg_w, height = bg_h, x_center = int(video_w/2), y_center = int(video_h / 2))
+    x_start, y_start = (video_w - bg_w) // 2, (video_h - bg_h) // 2
+    video = video.crop(x1 = x_start, y1 = y_start, 
+                       x2 = x_start + bg_w, y2 = y_start + bg_h)
     
     return video
 
