@@ -119,5 +119,5 @@ def get_video_clip(video_id: str, start_time: float=None, end_time: float=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-get_video_clip("vIeFt88Hm8s", start_time = 30.18, end_time=30.51)
+get_video_clip("QIz15aJR3Mw", start_time = 4.14, end_time=5.05)
 
