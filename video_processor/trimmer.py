@@ -6,8 +6,15 @@ import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from video_processor.editor import change_aspect_ratio
+from editor import change_aspect_ratio
+import math
 
+
+def time_stamp_to_sec(time_stamp: float) -> float:
+    minutes = math.floor(time_stamp)
+    seconds = (time_stamp - minutes) * 60.0
+    
+    return minutes * 60.0 + seconds
 
 with open('../configs/yt_config.toml') as f:
     config = toml.load(f)
@@ -18,17 +25,26 @@ with open("../data/videos/scraped_videos.json") as f:
     videos_dict = json.load(f)
 
 
-def get_trimmed_video_srt(video_id: str, start_time: float) -> pd.DataFrame:
+def get_trimmed_video_srt(video_id: str, start_time: float, end_time: float) -> pd.DataFrame:
     video_dict = videos_dict[video_id]    
 
     srt_df = pd.DataFrame(video_dict["captions"])
-
+    
     if not start_time:
         frame_start_list = srt_df[srt_df["start"] < srt_df.loc[srt_df.index[-1], "start"] - SHORT_VIDEO_LENTGTH]['start'].values
         start_time = np.random.choice(frame_start_list)
-
-    trimmed_video_srt = srt_df[(srt_df["start"] >= start_time) & (srt_df["start"] <= start_time + SHORT_VIDEO_LENTGTH)]
-    # trimmed_video_srt["start"] -=  start_time
+    else:
+        start_time = time_stamp_to_sec(start_time)
+        
+    if not end_time:
+        end_time = start_time + SHORT_VIDEO_LENTGTH
+    else:
+        end_time = time_stamp_to_sec(end_time)
+        end_time = srt_df[srt_df["start"] >= end_time]["start"].values[0]
+        
+    print(f"Start and end times: {start_time} - {end_time}")
+    
+    trimmed_video_srt = srt_df[(srt_df["start"] >= start_time) & (srt_df["start"] <= end_time)]
     
     return trimmed_video_srt
 
@@ -37,8 +53,7 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     caption_clips = []
     trimmed_video_srt.reset_index(inplace=True)
     clip_end = video_clip.end
-    # print(clip_end)
-    # print(len(trimmed_video_srt))
+    
     initial_start_time = trimmed_video_srt.iloc[0]['start']
     for i in range(1, len(trimmed_video_srt)-1):
         end_prev_caption = trimmed_video_srt.iloc[i-1]['start'] - initial_start_time + trimmed_video_srt.iloc[i-1]['duration']
@@ -69,10 +84,9 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     
     return composite_clip
 
-def get_video_clip(video_id: str, start_time: float =None):
-    
-    trimmed_video_srt = get_trimmed_video_srt(video_id, start_time)
-    
+def get_video_clip(video_id: str, start_time: float=None, end_time: float=None):
+        
+    trimmed_video_srt = get_trimmed_video_srt(video_id, start_time, end_time)
     print(">> generated SRT for the clip")
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
@@ -105,5 +119,5 @@ def get_video_clip(video_id: str, start_time: float =None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-get_video_clip("iMyB_8eWfak")
+get_video_clip("vIeFt88Hm8s", start_time = 30.18, end_time=30.51)
 
