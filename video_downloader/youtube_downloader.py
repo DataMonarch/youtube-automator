@@ -115,30 +115,30 @@ def search_and_download_top_k(query: str, k: int = 10, save_path = '../data/vide
 
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-l", "--url", help="Enter the url of the video", default=None)
-parser.add_argument("-f", "--file", help="Enter the path to the file", default=None)
-parser.add_argument("-s", "--save_path", help="Enter the path to save the video", default=None)
-parser.add_argument("-q", "--query", help="Enter the query to search for", default=None)
-parser.add_argument("-c", "--count", help="Enter the number of videos to download", default=10)
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-l", "--url", help="Enter the url of the video", default=None)
+# parser.add_argument("-f", "--file", help="Enter the path to the file", default=None)
+# parser.add_argument("-s", "--save_path", help="Enter the path to save the video", default=None)
+# parser.add_argument("-q", "--query", help="Enter the query to search for", default=None)
+# parser.add_argument("-c", "--count", help="Enter the number of videos to download", default=10)
+# args = parser.parse_args()
 
-if args.url:
-    url = args.url
-    ret = download(url)
+# if args.url:
+#     url = args.url
+#     ret = download(url)
 
-elif args.file:
-    file = args.file
-    with open(file, 'r') as f:
-        for line in f:
-            url = line
-            ret = download(url)
+# elif args.file:
+#     file = args.file
+#     with open(file, 'r') as f:
+#         for line in f:
+#             url = line
+#             ret = download(url)
             
-elif args.query:
-    search_and_download_top_k(args.query, int(args.count))
+# elif args.query:
+#     search_and_download_top_k(args.query, int(args.count))
 
-else:
-    print("Please enter a url, a file name, or a search query")
+# else:
+#     print("Please enter a url, a file name, or a search query")
     
     
     
