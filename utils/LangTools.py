@@ -3,17 +3,22 @@ from gingerit.gingerit import GingerIt
 
 # nltk.download('punkt')
 
-# def correct_text(text):
-#     correct_text = ''
-#     for sentence in sentences:
-#     parser = GingerIt()
-#     corrected_sentence = parser.parse(sentence)
-#     return corrected_text['result']
+def correct_text(text):
+    """Corrects the grammar of the inputted text using the GingerIt library
 
-text = "I is a engeneer. I can has cheezburger?"
-sentences = nltk.sent_tokenize(text)
+    Args:
+        text (str): The text to be corrected
 
-for sentence in sentences:
-    parser = GingerIt()
-    corrected_sentence = parser.parse(sentence)
-    print(corrected_sentence['result'])
+    Returns:
+        str: The corrected text
+    """
+    correct_text = ''
+    sentences = nltk.sent_tokenize(text)
+    
+    for sentence in sentences:
+        parser = GingerIt()
+        corrected_sentence = parser.parse(sentence)
+        correct_text += corrected_sentence['result'] + ' '
+
+    return correct_text
+
