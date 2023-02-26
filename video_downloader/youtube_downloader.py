@@ -1,8 +1,6 @@
 from pytube import YouTube, Search, extract, query
-import random
-from captions import get_srt_captions
+# from captions import get_srt_captions
 
-import google.auth
 from googleapiclient.discovery import build
 import argparse
 import os
