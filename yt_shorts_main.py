@@ -24,16 +24,22 @@ if args.url or args.video_id:
     else:
         raise ValueError("Please enter a valid url or video id")
     
-count = int(args.count)
+    
 start_time = args.start
 end_time = args.end
+
+
 
 if not video_id in available_video_ids:
     print(f">>> Video with id {video_id} not found in the available videos list. Downloading now...")
     youtube_downloader.download(video_id)
 
-for i in range(count):
-   
+if args.count:
+    count = int(args.count)
+    for i in range(count):
+    
+        trimmer.get_video_clip(video_id, start_time, end_time)
+else:
     trimmer.get_video_clip(video_id, start_time, end_time)
     
 
