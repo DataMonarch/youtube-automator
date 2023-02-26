@@ -1,12 +1,11 @@
 from googleapiclient.discovery import build
 import tomli
 
-with open("../../configs/yt_config.toml") as f:
+with open("../configs/yt_config.toml", "rb") as f:
     config = tomli.load(f)
-    API_KEY = config["api_key"]
+    API_KEY = config["youtube_data_api"]["key"]
 
 
-API_KEY = 'YOUR_API_KEY_HERE'
 CHANNEL_ID = 'UCllYn_ao6QzNKMyixWmHmkw'
 
 youtube = build('youtube', 'v3', developerKey=API_KEY)
