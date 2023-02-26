@@ -10,11 +10,16 @@ from editor import change_aspect_ratio
 import math
 
 
-def time_stamp_to_sec(time_stamp: float) -> float:
-    minutes = math.floor(time_stamp)
-    seconds = (time_stamp - minutes) * 60.0
+def time_stamp_to_sec(time_stamp: str) -> float:
+    time_stamp = time_stamp.split(".")
+    if len(time_stamp) == 1:
+        time_stamp = ["0", "0"] + time_stamp
+    elif len(time_stamp) == 2:
+        time_stamp = ["0"] + time_stamp
     
-    return minutes * 60.0 + seconds
+    h, m, s = [int(i) for i in time_stamp]
+    return h * 3600.0 + m * 60.0 + s
+    
 
 with open('../configs/yt_config.toml') as f:
     config = toml.load(f)
@@ -25,7 +30,7 @@ with open("../data/videos/scraped_videos.json") as f:
     videos_dict = json.load(f)
 
 
-def get_trimmed_video_srt(video_id: str, start_time: float, end_time: float) -> pd.DataFrame:
+def get_trimmed_video_srt(video_id: str, start_time: str, end_time: str) -> pd.DataFrame:
     video_dict = videos_dict[video_id]    
 
     srt_df = pd.DataFrame(video_dict["captions"])
@@ -84,7 +89,7 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     
     return composite_clip
 
-def get_video_clip(video_id: str, start_time: float=None, end_time: float=None):
+def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
         
     trimmed_video_srt = get_trimmed_video_srt(video_id, start_time, end_time)
     print(">> generated SRT for the clip")
@@ -119,5 +124,5 @@ def get_video_clip(video_id: str, start_time: float=None, end_time: float=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-get_video_clip("QIz15aJR3Mw", start_time = 4.14, end_time=5.05)
+get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
