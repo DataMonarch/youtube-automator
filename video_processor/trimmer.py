@@ -44,7 +44,10 @@ def get_trimmed_video_srt(video_id: str, start_time: str, end_time: str) -> pd.D
         end_time = start_time + SHORT_VIDEO_LENTGTH
     else:
         end_time = time_stamp_to_sec(end_time)
-        end_time = srt_df[srt_df["start"] >= end_time]["start"].values[0]
+        try:
+            end_time = srt_df[srt_df["start"] >= end_time]["start"].values[0]
+        except IndexError:
+            end_time = srt_df["start"].values[-1]
         
     print(f"Start and end times: {start_time} - {end_time}")
     

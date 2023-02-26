@@ -27,6 +27,7 @@ if args.url or args.video_id:
     
 start_time = args.start
 end_time = args.end
+print(f"end_time: {end_time}")
 url = args.url
 
 
