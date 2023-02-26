@@ -27,12 +27,12 @@ if args.url or args.video_id:
     
 start_time = args.start
 end_time = args.end
-
+url = args.url
 
 
 if not video_id in available_video_ids:
     print(f">>> Video with id {video_id} not found in the available videos list. Downloading now...")
-    youtube_downloader.download(video_id)
+    youtube_downloader.download(url)
 
 if args.count:
     count = int(args.count)
