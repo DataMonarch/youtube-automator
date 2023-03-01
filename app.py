@@ -10,24 +10,27 @@ def get_video_clip():
     start_time = start_input.get()
     end_time = end_input.get()
     
-    with open("../data/videos/scraped_videos.json", "rb") as f:
+    with open("../data/videos/scraped_videos.json", "r") as f:
         available_videos = json.load(f)
         available_video_ids = available_videos.keys()
     
     # extract the youtube video id from the url
     video_id = video_url.split("=")[1]
     
-    if not video_id in available_video_ids:
+    # make sure the video is downloaded before trimming
+    
+    
+    if  video_id not in available_video_ids:
         print(f">>> Video with id {video_id} not found in the available videos list. Downloading now...")
         youtube_downloader.download(video_url)
     
-    with open("../data/videos/scraped_videos.json", "rb") as f:
-        available_videos = json.load(f)
-        available_video_ids = available_videos.keys()
+    # with open("../data/videos/scraped_videos.json", "r") as f:
+    #     available_videos = json.load(f)
+    #     available_video_ids = available_videos.keys()
     
-    if video_id in available_video_ids:
-        print(f">>> Video with id {video_id} found in the available videos list. Trimming now...")
-        trimmer.get_video_clip(video_id, start_time, end_time)
+    # if video_id in available_video_ids:
+    print(f">>> Done dowloading. Trimming now...")
+    trimmer.get_video_clip(video_id, start_time, end_time)
     
 
 root = tk.Tk()
