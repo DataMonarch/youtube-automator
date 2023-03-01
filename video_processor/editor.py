@@ -63,7 +63,7 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
 
         return video_new_ar
     
-def add_logo(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
+def add_image(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
              x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):
     """Adds a logo on top of the video.
 
@@ -87,44 +87,5 @@ def add_logo(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
     duration = video.duration
     logo = logo.set_pos((x_top_left, y_top_left)).set_duration(duration)
     final_video = mp.CompositeVideoClip([video, logo])
-    
-    return final_video
-
-def add_logo_cv2(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
-             x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):
-    """Adds a logo on top of the video.
-
-    Args:
-        video (VideoFileClip): original video.
-        logo_path (str, optional): path to the logo image. Defaults to "../data/docs/logo.png".
-        x_top_left (int, optional): x coordinate of the top left corner of the logo on the video. Defaults to None.
-        y_top_left (int, optional): y coordinate of the top left corner of the logo on the video. Defaults to None.
-    """
-    width, height = video.size
-    
-    logo = cv2.imread(logo_path)
-    # logo = logo.resize(width=int(width * scaling_factor))
-    logo_width = int(width * scaling_factor)
-    logo_height = int(logo.shape[0] * logo_width / logo.shape[1])
-    logo = np.resize(logo, (logo_height, logo_width, 3))
-    
-    if x_top_left is None:
-        x_top_left = (width - logo.shape[1]) // 2
-    
-    if y_top_left is None:
-        y_top_left = 170
-    
-    frames = np.array([frame for frame in video.iter_frames()])
-    
-    for frame in frames:
-        frame[y_top_left:y_top_left + logo.shape[0], x_top_left:x_top_left + logo.shape[1]] = logo
-        
-    
-    
-    
-    # duration = video.duration
-    # logo = logo.set_pos((x_top_left, y_top_left)).set_duration(duration)
-    # final_video = mp.CompositeVideoClip([video, logo])
-    final_video = VideoClip(frames, duration=video.duration)
     
     return final_video
