@@ -3,7 +3,7 @@ from video_downloader import youtube_downloader
 import argparse
 import json
 
-with open("../data/videos/scraped_videos.json", "rb"Application ) as f:
+with open("../data/videos/scraped_videos.json", "rb"     ) as f:
     available_videos = json.load(f)
     available_video_ids = available_videos.keys()
 
