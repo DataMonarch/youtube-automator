@@ -25,11 +25,8 @@ with open('../configs/yt_config.toml') as f:
     SHORT_VIDEO_LENTGTH = config["video_processing"]["video_len"]
 
 
-with open("../data/videos/scraped_videos.json") as f:
-    videos_dict = json.load(f)
 
-
-def get_trimmed_video_srt(video_id: str, start_time: str, end_time: str) -> pd.DataFrame:
+def get_trimmed_video_srt(videos_dict: dict, video_id: str, start_time: str, end_time: str) -> pd.DataFrame:
     video_dict = videos_dict[video_id]    
 
     srt_df = pd.DataFrame(video_dict["captions"])
@@ -92,8 +89,11 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     return composite_clip
 
 def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
-        
-    trimmed_video_srt = get_trimmed_video_srt(video_id, start_time, end_time)
+    
+    with open("../data/videos/scraped_videos.json") as f:
+        videos_dict = json.load(f)
+    
+    trimmed_video_srt = get_trimmed_video_srt(videos_dict, video_id, start_time, end_time)
     print(">> generated SRT for the clip")
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
