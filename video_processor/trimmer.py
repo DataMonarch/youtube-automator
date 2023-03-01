@@ -6,7 +6,7 @@ import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from video_processor.editor import change_aspect_ratio
+from video_processor.editor import change_aspect_ratio, add_logo
 
 
 def time_stamp_to_sec(time_stamp: str) -> float:
@@ -105,6 +105,8 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     subclip = change_aspect_ratio(subclip)
+    subclip = add_logo(subclip)
+    
     # subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory

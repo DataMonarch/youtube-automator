@@ -63,3 +63,29 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
 
         return video_new_ar
     
+def add_logo(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
+             x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):
+    """Adds a logo on top of the video.
+
+    Args:
+        video (VideoFileClip): original video.
+        logo_path (str, optional): path to the logo image. Defaults to "../data/docs/logo.png".
+        x_top_left (int, optional): x coordinate of the top left corner of the logo on the video. Defaults to None.
+        y_top_left (int, optional): y coordinate of the top left corner of the logo on the video. Defaults to None.
+    """
+    width, height = video.size
+    
+    logo = mp.ImageClip(logo_path)
+    logo = logo.resize(width=int(width * scaling_factor))
+    
+    if x_top_left is None:
+        x_top_left = (width - logo.size[0]) // 2
+    
+    if y_top_left is None:
+        y_top_left = 170
+        
+    duration = video.duration
+    logo = logo.set_pos((x_top_left, y_top_left)).set_duration(duration)
+    final_video = mp.CompositeVideoClip([video, logo])
+    
+    return final_video
