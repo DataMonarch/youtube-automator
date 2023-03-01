@@ -3,6 +3,10 @@ from video_downloader import youtube_downloader
 import argparse
 import json
 
+import time
+
+start = time.time()
+
 with open("../data/videos/scraped_videos.json", "r") as f:
     available_videos = json.load(f)
     available_video_ids = available_videos.keys()
@@ -44,4 +48,4 @@ else:
     trimmer.get_video_clip(video_id, start_time, end_time)
     
 
-# a parser to get the arguments video_id and count from the command line and assign them to variables
+print(f">>> Done trimming. Time taken: {time.time() - start} seconds")
