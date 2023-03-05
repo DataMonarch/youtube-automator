@@ -1,9 +1,13 @@
 # a gui application that takes a youtube video url and start and end times as input and submits 
 
 import tkinter as tk
+from tkinter.scrolledtext import ScrolledText
+import sys
 from video_processor import trimmer
 from video_downloader import youtube_downloader
 import json
+
+
 
 def get_video_clip():
     video_url = url_input.get() 
@@ -34,6 +38,30 @@ def get_video_clip():
     trimmer.get_video_clip(video_id, start_time, end_time)
     
 
+def redirect_output(function):
+    def wrapper(*args, **kwargs):
+        # redirect output to the Text widget
+        text_widget = kwargs.pop('text_widget', None)
+        if text_widget:
+            text_widget.configure(state="normal")
+            text_widget.delete('1.0', 'end')
+            original_stdout = sys.stdout
+            sys.stdout = redirected_output = tk.StringIO()
+            result = function(*args, **kwargs)
+            sys.stdout = original_stdout
+            redirected_output = redirected_output.getvalue()
+            text_widget.insert('end', redirected_output)
+            text_widget.configure(state="disabled") 
+        else:
+            result = function(*args, **kwargs)
+        return result
+    return wrapper
+
+
+@redirect_output
+def submit_action():
+    get_video_clip()
+
 root = tk.Tk()
 
 url_label = tk.Label(root, text="Enter YouTube Video URL:")
@@ -54,7 +82,7 @@ end_label.pack()
 end_input = tk.Entry(root)
 end_input.pack()
 
-submit_button = tk.Button(root, text="Submit", command=get_video_clip)
+submit_button = tk.Button(root, text="Submit", command=submit_action)
 submit_button.pack()
 
 root.mainloop()
