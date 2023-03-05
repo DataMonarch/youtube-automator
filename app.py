@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 import sys
+from io import StringIO
 from video_processor import trimmer
 from video_downloader import youtube_downloader
 import json
@@ -46,7 +47,7 @@ def redirect_output(function):
             text_widget.configure(state="normal")
             text_widget.delete('1.0', 'end')
             original_stdout = sys.stdout
-            sys.stdout = redirected_output = tk.StringIO()
+            sys.stdout = redirected_output = StringIO()
             result = function(*args, **kwargs)
             sys.stdout = original_stdout
             redirected_output = redirected_output.getvalue()
@@ -82,7 +83,10 @@ end_label.pack()
 end_input = tk.Entry(root)
 end_input.pack()
 
-submit_button = tk.Button(root, text="Submit", command=submit_action)
+text_widget = ScrolledText(root)
+text_widget.pack()
+
+submit_button = tk.Button(root, text="Submit", command=submit_action(text_widget=text_widget))
 submit_button.pack()
 
 root.mainloop()
