@@ -31,7 +31,6 @@ def get_video_clip(gui, url_input, start_input, end_input):
     
     # extract the youtube video id from the url
     video_id = video_url.split("=")[1]
-    video_id = video_id.split("&")[0]
     
     # make sure the video is downloaded before trimming
     
