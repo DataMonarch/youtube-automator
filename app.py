@@ -18,8 +18,9 @@ class GUI:
         self.progress_text.insert(tk.END, message)
         self.progress_text.see(tk.END)
         self.master.update_idletasks()
+        sys.stdout.flush()
 
-def get_video_clip(gui):
+def get_video_clip(gui, url_input, start_input, end_input):
     video_url = url_input.get() 
     start_time = start_input.get()
     end_time = end_input.get()
@@ -57,7 +58,6 @@ def main():
     root.title("VIdeo Trimmer")
     
     gui = GUI(root)
-    sys.stdout = gui
     
     url_label = tk.Label(root, text="Enter YouTube Video URL:")
     url_label.pack()
@@ -80,9 +80,8 @@ def main():
     text_widget = ScrolledText(root)
     text_widget.pack()
       
-    submit_button = tk.Button(root, text="Submit", command=get_video_clip(gui))
+    submit_button = tk.Button(root, text="Submit", command=get_video_clip(gui, url_input, start_input, end_input))
     submit_button.pack()
-
 
     # Redirect stdout to the GUI text widget
     root.mainloop()
