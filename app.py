@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 import sys
-from io import StringIO
+from tkinter import ttk
 from video_processor import trimmer
 from video_downloader import youtube_downloader
 import json
@@ -59,32 +59,38 @@ def get_video_clip(gui, url_input, start_input, end_input):
 def main():
     root = tk.Tk()
     root.title("VIdeo Trimmer")
+    root.configure(bg='gray15')
     # root.geometry("500x250")
     
-    url_label = tk.Label(root, text="Enter YouTube Video URL:")
-    url_label.grid(row=0, column=0, columnspan=2)
+    # Creating style for the input fields
+    style = ttk.Style()
+    style.configure('TEntry', foreground='gray70', fieldbackground='gray25')
+    
+    url_label = ttk.Label(root, text="Enter YouTube Video URL:", foreground='gray70', background='gray15')
+    url_label.grid(row=0, column=0, columnspan=2, sticky="NSEW", padx=10, pady=10)
 
-    url_input = tk.Entry(root)
-    url_input.grid(row=1, column=0, columnspan=2)
+    url_input = ttk.Entry(root, width=50)
+    url_input.grid(row=1, column=0, columnspan=2, sticky="NSEW", padx=10, pady=10)
 
-    start_label = tk.Label(root, text="Enter Start Time (hh.mm.ss):")
-    start_label.grid(row=2, column=0)
+    start_label = ttk.Label(root, text="Enter Start Time (hh.mm.ss):", foreground='gray70', background='gray15')
+    start_label.grid(row=2, column=0, sticky="NSEW", padx=10, pady=10)
 
-    start_input = tk.Entry(root)
-    start_input.grid(row=3, column=0)
+    start_input = ttk.Entry(root)
+    start_input.grid(row=3, column=0, sticky="NSEW", padx=10, pady=10)
 
-    end_label = tk.Label(root, text="Enter End Time (hh.mm.ss):")
-    end_label.grid(row=2, column=1)
+    end_label = ttk.Label(root, text="Enter End Time (hh.mm.ss):", foreground='gray70', background='gray15')
+    end_label.grid(row=2, column=1, sticky="NSEW", padx=10, pady=10)
 
-    end_input = tk.Entry(root)
-    end_input.grid(row=3, column=1)
+    end_input = ttk.Entry(root)
+    end_input.grid(row=3, column=1, sticky="NSEW", padx=10, pady=10)
 
       
-    submit_button = tk.Button(root, text="Submit", command=lambda: get_video_clip(gui, url_input, start_input, end_input))
-    submit_button.grid(row=4, column=1)
+    submit_button = ttk.Button(root, text="Submit", command=lambda: get_video_clip(gui, url_input, start_input, end_input), width=30)
+    submit_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
     gui = GUI(root)
-
+    # for child in root.winfo_children():
+    #     child.grid_configure(sticky="NSEW")
     # text_widget = ScrolledText(root)
     # text_widget.pack()
     # Redirect stdout to the GUI text widget
