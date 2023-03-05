@@ -12,7 +12,7 @@ class GUI:
     def __init__(self, master):
         self.master = master
         self.progress_text = tk.Text(master, height=5, width=50)
-        self.progress_text.grid(row=5, column=0, columnspan=2)
+        self.progress_text.grid(row=5, column=0, columnspan=2, padx=10, pady=10)
 
     def log_progress(self, message):
         self.progress_text.insert(tk.END, message)
