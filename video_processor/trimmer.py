@@ -50,6 +50,11 @@ def get_trimmed_video_srt(videos_dict: dict, video_id: str, start_time: str, end
     
     trimmed_video_srt = srt_df[(srt_df["start"] >= start_time) & (srt_df["start"] <= end_time)]
     
+    # add a new row with the full text of the caption
+    full_text = trimmed_video_srt["text"].str.cat(sep=" ")
+    trimmed_video_srt = trimmed_video_srt.append({"start": start_time, "duration": end_time - start_time, "text": full_text}, ignore_index=True)
+    
+    
     return trimmed_video_srt
 
 
@@ -95,6 +100,8 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     
     trimmed_video_srt = get_trimmed_video_srt(videos_dict, video_id, start_time, end_time)
     print(">> generated SRT for the clip")
+    print(trimmed_video_srt)
+    
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
     
@@ -129,5 +136,5 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-# get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
+get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
