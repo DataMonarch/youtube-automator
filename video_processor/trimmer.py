@@ -100,7 +100,7 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     
     trimmed_video_srt = get_trimmed_video_srt(videos_dict, video_id, start_time, end_time)
     print(">> generated SRT for the clip")
-    print(trimmed_video_srt)
+    # print(trimmed_video_srt)
     
     
     start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
@@ -136,5 +136,5 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
+# get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
