@@ -6,7 +6,7 @@ import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from .editor import change_aspect_ratio, add_image
+from editor import change_aspect_ratio, add_image
 
 
 def time_stamp_to_sec(time_stamp: str) -> float:
@@ -103,7 +103,7 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     # print(trimmed_video_srt)
     
     
-    start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-1]["start"]
+    start_time, end_time = trimmed_video_srt.iloc[0]["start"], trimmed_video_srt.iloc[-2]["start"]
     
     # create a VideoFileClip object
     video_path = videos_dict[video_id]["file_path"]
@@ -136,5 +136,5 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-# get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
+get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
