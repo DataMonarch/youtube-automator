@@ -62,27 +62,33 @@ def main():
     # root.geometry("500x250")
     
     # Creating style for the input fields
+    label_style_options = {
+        'foreground': 'gray70',
+        'background': 'gray15',
+    }
     
     input_style_options = {
         'foreground': 'black',
         'background': 'white',
-    }   
+    }
+    
+       
     style = ttk.Style()
     style.configure('TEntry', foreground='gray70', fieldbackground='gray25')
     
-    url_label = ttk.Label(root, text="Enter YouTube Video URL:", foreground='gray70', background='gray15')
+    url_label = ttk.Label(root, text="Enter YouTube Video URL:", **label_style_options)
     url_label.grid(row=0, column=0, columnspan=2, sticky="NSEW", padx=10, pady=10)
 
     url_input = ttk.Entry(root, width=50, **input_style_options)
     url_input.grid(row=1, column=0, columnspan=2, sticky="NSEW", padx=10, pady=10)
 
-    start_label = ttk.Label(root, text="Enter Start Time (hh.mm.ss):", foreground='gray70', background='gray15')
+    start_label = ttk.Label(root, text="Enter Start Time (hh.mm.ss):", **label_style_options)
     start_label.grid(row=2, column=0, sticky="NSEW", padx=10, pady=10)
 
     start_input = ttk.Entry(root, **input_style_options)
     start_input.grid(row=3, column=0, sticky="NSEW", padx=10, pady=10)
 
-    end_label = ttk.Label(root, text="Enter End Time (hh.mm.ss):", foreground='gray70', background='gray15')
+    end_label = ttk.Label(root, text="Enter End Time (hh.mm.ss):", **label_style_options)
     end_label.grid(row=2, column=1, sticky="NSEW", padx=10, pady=10)
 
     end_input = ttk.Entry(root, **input_style_options)
