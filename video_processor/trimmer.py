@@ -6,7 +6,7 @@ import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from .editor import change_aspect_ratio, add_image
+from editor import change_aspect_ratio, add_image
 
 
 def time_stamp_to_sec(time_stamp: str) -> float:
@@ -62,36 +62,44 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     caption_clips = []
     trimmed_video_srt.reset_index(inplace=True)
     clip_end = video_clip.end
+    audio = video_clip.audio
     
     initial_start_time = trimmed_video_srt.iloc[0]['start']
-    for i in range(1, len(trimmed_video_srt)-1):
-        end_prev_caption = trimmed_video_srt.iloc[i-1]['start'] - initial_start_time + trimmed_video_srt.iloc[i-1]['duration']
+    for i in range(0, len(trimmed_video_srt)):
+        # end_prev_caption = trimmed_video_srt.iloc[i-1]['start'] - initial_start_time + trimmed_video_srt.iloc[i-1]['duration']
         start_curr_caption = trimmed_video_srt.iloc[i]['start'] - initial_start_time
         # end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
-        start_next_caption = trimmed_video_srt.iloc[i+1]['start'] - initial_start_time
-        end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
+        # start_next_caption = trimmed_video_srt.iloc[i+1]['start'] - initial_start_time
+        if i < len(trimmed_video_srt) - 1:
+            end_curr_caption = trimmed_video_srt.iloc[i+1]['start'] - initial_start_time
+        else:
+            end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
         
-        text = ""
-        
-        # if start_curr_caption < end_prev_caption:
-        #     text += trimmed_video_srt.iloc[i-1]['text']
-            
-        text += " " + trimmed_video_srt.iloc[i]['text']
+        text = trimmed_video_srt.iloc[i]['text']
         
         # if end_curr_caption > start_next_caption:
         #     text += trimmed_video_srt.iloc[i+1]['text']            
         
         # print(f"text's length: {len(text)}")
-        caption_clip = mp.TextClip(text, fontsize=23, color='black', method="caption", size=video_clip.size, align="South", bg_color='white', transparent=False).set_start(start_curr_caption).set_end(end_curr_caption)
-        print(caption_clip.size)
-        caption_clips.append(caption_clip)
-        # print(f"INFO: caption {i} set. Start time: {start_curr_caption}")
+        video_width, video_height = video_clip.size
+        width = int(0.8*video_width)
+        height = 50
         
+        caption_clip = mp.TextClip(text, fontsize=32, color='white', method="caption", size=(width, height), align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
+        caption_clip = caption_clip.set_position(("center", 0.75*video_height))
+        
+        # print(caption_clip.size)
+        # caption_clips.append(caption_clip)
+        # print(f"INFO: caption {i} set. Start time: {start_curr_caption}")
+        video_clip = mp.CompositeVideoClip([video_clip, caption_clip], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
     print(len(caption_clips))
-    captions = clips_array([caption_clips], bg_color="transparent")
-    composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(("center", "bottom"))], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
+    # captions = clips_array([caption_clips], bg_color="transparent")
+    # composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(("center", "bottom"))], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
     
-    return composite_clip
+    # add audio to the video
+    video_clip = video_clip.set_audio(audio)
+    
+    return video_clip
 
 def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     
@@ -119,7 +127,7 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     subclip = add_image(subclip, scaling_factor=0.275)
     # subclip = add_logo_cv2(subclip, scaling_factor=0.275)
     
-    # subclip = add_captions(subclip, trimmed_video_srt)
+    subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
     
@@ -139,5 +147,5 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-# get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
+get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
