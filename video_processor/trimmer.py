@@ -65,12 +65,12 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
     audio = video_clip.audio
     
     initial_start_time = trimmed_video_srt.iloc[0]['start']
-    for i in range(0, len(trimmed_video_srt)):
+    for i in range(0, len(trimmed_video_srt)-1):
         # end_prev_caption = trimmed_video_srt.iloc[i-1]['start'] - initial_start_time + trimmed_video_srt.iloc[i-1]['duration']
         start_curr_caption = trimmed_video_srt.iloc[i]['start'] - initial_start_time
         # end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
         # start_next_caption = trimmed_video_srt.iloc[i+1]['start'] - initial_start_time
-        if i < len(trimmed_video_srt) - 1:
+        if i < len(trimmed_video_srt) - 2:
             end_curr_caption = trimmed_video_srt.iloc[i+1]['start'] - initial_start_time
         else:
             end_curr_caption = start_curr_caption + trimmed_video_srt.iloc[i]['duration']
@@ -83,9 +83,9 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         # print(f"text's length: {len(text)}")
         video_width, video_height = video_clip.size
         width = int(0.8*video_width)
-        height = 50
+        height = 0
         
-        caption_clip = mp.TextClip(text, fontsize=32, color='white', method="caption", size=(width, height), align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
+        caption_clip = mp.TextClip(text, fontsize=32, color='white', method="caption", size=(width, None), align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
         caption_clip = caption_clip.set_position(("center", 0.75*video_height))
         
         # print(caption_clip.size)
