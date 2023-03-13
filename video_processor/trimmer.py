@@ -80,7 +80,6 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         # if end_curr_caption > start_next_caption:
         #     text += trimmed_video_srt.iloc[i+1]['text']            
         
-        # print(f"text's length: {len(text)}")
         video_width, video_height = video_clip.size
         width = int(0.8*video_width)
         # height = 0
@@ -89,11 +88,9 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
                                    align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
         caption_clip = caption_clip.set_position(("center", 0.75*video_height))
         
-        # print(caption_clip.size)
         # caption_clips.append(caption_clip)
         # print(f"INFO: caption {i} set. Start time: {start_curr_caption}")
         video_clip = mp.CompositeVideoClip([video_clip, caption_clip], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
-    print(len(caption_clips))
     # captions = clips_array([caption_clips], bg_color="transparent")
     # composite_clip = mp.CompositeVideoClip([video_clip, captions.set_pos(("center", "bottom"))], use_bgclip=True, size=video_clip.size).set_duration(video_clip.duration)
     
