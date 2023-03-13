@@ -83,9 +83,10 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         # print(f"text's length: {len(text)}")
         video_width, video_height = video_clip.size
         width = int(0.8*video_width)
-        height = 0
+        # height = 0
         
-        caption_clip = mp.TextClip(text, fontsize=32, color='white', method="caption", size=(width, None), align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
+        caption_clip = mp.TextClip(text, fontsize=32, color='black', bg_color='gold', method="caption", size=(width, None), font="Arial-Bold", 
+                                   align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
         caption_clip = caption_clip.set_position(("center", 0.75*video_height))
         
         # print(caption_clip.size)
