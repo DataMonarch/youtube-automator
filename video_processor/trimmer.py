@@ -139,7 +139,7 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     output_path = os.path.join(output_dir, file_name + ".mp4")  
     
     # extract the trimmed video and preserve the audio
-    subclip.write_videofile(output_path, audio=True)
+    subclip.write_videofile(output_path, audio=True, audio_codec="aac", threads=4)
     
     # save the srt file in the output directory
     csv_filename = os.path.join(output_dir, file_name + ".csv")
