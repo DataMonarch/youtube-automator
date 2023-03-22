@@ -74,7 +74,36 @@ def crop_to_aspect_ratio(video: VideoFileClip, aspect_ratio: float = 9/16,
         y_offset = (video.h - new_height) / 2
         video = video.crop(y1=y_offset, y2=video.h - y_offset)
         
-    return video.resize(resize_factor)    
+    return video 
+
+def add_gaussian_blur(video: VideoFileClip, blur_size: int = 5) -> VideoFileClip:
+    """Adds a Gaussian blur to the video.
+
+    Args:
+        video (VideoFileClip): The video to be blurred.
+        blur_size (int, optional): The size of the blur. Defaults to 5.
+
+    Returns:
+        VideoFileClip: The blurred video.
+    """
+    
+    # Get video frames
+    frames = []
+    for frame in video.iter_frames():
+        frames.append(frame)
+
+    # Apply Gaussian blur to each frame
+    blurred_frames = []
+    for frame in frames:
+        blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)
+        blurred_frames.append(blurred_frame)
+
+    # Create video clip from blurred frames
+    blurred_video = mp.ImageSequenceClip(blurred_frames, fps=video.fps)
+
+    # Add audio to blurred clip
+    blurred_video = blurred_video.set_audio(video.audio)
+    return video
     
 def add_image(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
              x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):

@@ -5,9 +5,10 @@ import numpy as np
 import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
+# from moviepy.video.fx.all import GaussianBlur
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from editor import change_aspect_ratio, add_image, add_self_as_bg, crop_to_aspect_ratio
-
+from editor import change_aspect_ratio, add_image, add_self_as_bg, crop_to_aspect_ratio, add_gaussian_blur
+import cv2
 
 def time_stamp_to_sec(time_stamp: str) -> float:
     time_stamp = time_stamp.split(".")
@@ -118,13 +119,15 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     # create a VideoFileClip object
     video_path = videos_dict[video_id]["file_path"]
     video = VideoFileClip(video_path)   
-    # video = video.resize(0.5)
+    video = video.resize(0.5)
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
     subclip_crop = change_aspect_ratio(subclip)
     # subclip = add_image(subclip, scaling_factor=0.275)
-    subclip = crop_to_aspect_ratio(video)
+    subclip = crop_to_aspect_ratio(subclip)
+    subclip = add_gaussian_blur(subclip, 10)
+
     # subclip = add_logo_cv2(subclip, scaling_factor=0.275)
     
     # subclip = add_captions(subclip, trimmed_video_srt)
