@@ -49,7 +49,8 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
     # If the aspect ratio is greater than the indicated ratio (e.g. 9:16 portrait), add black bars to the top and bottom
     if curr_aspect_ratio > new_aspect_ratio: # reverse as in MP aspect ratio is width / height
         video_cpy = video.copy()
-        
+        video = video.resize(0.5)
+
         width, height = video.size
         
         bar_height = int((int(width * (1 / new_aspect_ratio)) - height) / 2)
@@ -60,6 +61,19 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
         print(f"Size of the bg video: {bg_video.size[0]} x {bg_video.size[1]}")
 
         return video_new_ar
+    
+def crop_to_aspect_ratio(video: VideoFileClip, aspect_ratio: float = 9/16) -> VideoFileClip:
+    video_aspect_ratio = video.w / video.h
+    if video_aspect_ratio > aspect_ratio:
+        new_width = aspect_ratio * video.h
+        x_offset = (video.w - new_width) / 2
+        video = video.crop(x1=x_offset, x2=video.w - x_offset)
+    else:
+        new_height = video.w / aspect_ratio
+        y_offset = (video.h - new_height) / 2
+        video = video.crop(y1=y_offset, y2=video.h - y_offset)
+        
+    return video    
     
 def add_image(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
              x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):
