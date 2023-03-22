@@ -23,13 +23,12 @@ def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> 
         y_start = 0
         
     x_end, y_end = x_start + bg_w, y_start + bg_h
-    
     # if x_end - x > 
     
     video_cropped = video.crop(x1 = x_start, y1 = y_start, 
                        x2 = x_start + bg_w, y2 = y_start + bg_h)
     
-    print(f"Video will be cropped to size {bg_w} x {bg_h} starting at ({x_start}, {y_start})", )
+    print(f"Video will be cropped to size {bg_w} x {bg_h} starting at ({x_start}, {y_start}) and ending at ({x_end}, {y_end})", )
     
     return video_cropped
 
@@ -50,7 +49,6 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
     # If the aspect ratio is greater than the indicated ratio (e.g. 9:16 portrait), add black bars to the top and bottom
     if curr_aspect_ratio > new_aspect_ratio: # reverse as in MP aspect ratio is width / height
         video_cpy = video.copy()
-        video = video.resize(0.5)
         
         width, height = video.size
         

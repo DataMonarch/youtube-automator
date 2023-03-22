@@ -118,6 +118,7 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     # create a VideoFileClip object
     video_path = videos_dict[video_id]["file_path"]
     video = VideoFileClip(video_path)   
+    video = video.resize(0.5)
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
