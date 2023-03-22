@@ -6,7 +6,7 @@ import os
 import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from editor import change_aspect_ratio, add_image
+from .editor import change_aspect_ratio, add_image, add_self_as_bg
 
 
 def time_stamp_to_sec(time_stamp: str) -> float:
@@ -123,9 +123,10 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     subclip = video.subclip(start_time, end_time)
     subclip = change_aspect_ratio(subclip)
     subclip = add_image(subclip, scaling_factor=0.275)
+    # subclip = add_self_as_bg(video, subclip.size)
     # subclip = add_logo_cv2(subclip, scaling_factor=0.275)
     
-    subclip = add_captions(subclip, trimmed_video_srt)
+    # subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
     
@@ -145,5 +146,5 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
+# get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
