@@ -62,7 +62,8 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
 
         return video_new_ar
     
-def crop_to_aspect_ratio(video: VideoFileClip, aspect_ratio: float = 9/16) -> VideoFileClip:
+def crop_to_aspect_ratio(video: VideoFileClip, aspect_ratio: float = 9/16,
+                         resize_factor: float = 0.5) -> VideoFileClip:
     video_aspect_ratio = video.w / video.h
     if video_aspect_ratio > aspect_ratio:
         new_width = aspect_ratio * video.h
@@ -73,7 +74,7 @@ def crop_to_aspect_ratio(video: VideoFileClip, aspect_ratio: float = 9/16) -> Vi
         y_offset = (video.h - new_height) / 2
         video = video.crop(y1=y_offset, y2=video.h - y_offset)
         
-    return video    
+    return video.resize(resize_factor)    
     
 def add_image(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
              x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):

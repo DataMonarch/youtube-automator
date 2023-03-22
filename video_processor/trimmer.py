@@ -124,7 +124,7 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     subclip = video.subclip(start_time, end_time)
     subclip_crop = change_aspect_ratio(subclip)
     # subclip = add_image(subclip, scaling_factor=0.275)
-    subclip = add_self_as_bg(video, subclip_crop.size)
+    subclip = crop_to_aspect_ratio(video)
     # subclip = add_logo_cv2(subclip, scaling_factor=0.275)
     
     # subclip = add_captions(subclip, trimmed_video_srt)
