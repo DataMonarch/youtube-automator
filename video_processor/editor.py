@@ -95,7 +95,8 @@ def add_gaussian_blur(video: VideoFileClip, blur_size: int = 5) -> VideoFileClip
     # Apply Gaussian blur to each frame
     blurred_frames = []
     for frame in frames:
-        blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)
+        # blurred_frame = cv2.GaussianBlur(frame, (55, 55))
+        blurred_frame = cv2.medianBlur(frame, 55)
         blurred_frames.append(blurred_frame)
 
     # Create video clip from blurred frames
