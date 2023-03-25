@@ -49,7 +49,7 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
     # If the aspect ratio is greater than the indicated ratio (e.g. 9:16 portrait), add black bars to the top and bottom
     if curr_aspect_ratio > new_aspect_ratio: # reverse as in MP aspect ratio is width / height
         video_cpy = video.copy()
-        video = video.resize(0.5)
+        # video = video.resize(0.5)
 
         width, height = video.size
         
