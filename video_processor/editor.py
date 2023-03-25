@@ -23,13 +23,12 @@ def add_self_as_bg(video: VideoFileClip, bg_size: tuple,  blur: bool = True) -> 
         y_start = 0
         
     x_end, y_end = x_start + bg_w, y_start + bg_h
-    
     # if x_end - x > 
     
     video_cropped = video.crop(x1 = x_start, y1 = y_start, 
                        x2 = x_start + bg_w, y2 = y_start + bg_h)
     
-    print(f"Video will be cropped to size {bg_w} x {bg_h} starting at ({x_start}, {y_start})", )
+    print(f"Video will be cropped to size {bg_w} x {bg_h} starting at ({x_start}, {y_start}) and ending at ({x_end}, {y_end})", )
     
     return video_cropped
 
@@ -51,7 +50,7 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
     if curr_aspect_ratio > new_aspect_ratio: # reverse as in MP aspect ratio is width / height
         video_cpy = video.copy()
         video = video.resize(0.5)
-        
+
         width, height = video.size
         
         bar_height = int((int(width * (1 / new_aspect_ratio)) - height) / 2)
@@ -62,6 +61,50 @@ def change_aspect_ratio(video: VideoFileClip, new_aspect_ratio: float = 9/16) ->
         print(f"Size of the bg video: {bg_video.size[0]} x {bg_video.size[1]}")
 
         return video_new_ar
+    
+def crop_to_aspect_ratio(video: VideoFileClip, aspect_ratio: float = 9/16,
+                         resize_factor: float = 0.5) -> VideoFileClip:
+    video_aspect_ratio = video.w / video.h
+    if video_aspect_ratio > aspect_ratio:
+        new_width = aspect_ratio * video.h
+        x_offset = (video.w - new_width) / 2
+        video = video.crop(x1=x_offset, x2=video.w - x_offset)
+    else:
+        new_height = video.w / aspect_ratio
+        y_offset = (video.h - new_height) / 2
+        video = video.crop(y1=y_offset, y2=video.h - y_offset)
+        
+    return video 
+
+def add_gaussian_blur(video: VideoFileClip, blur_size: int = 5) -> VideoFileClip:
+    """Adds a Gaussian blur to the video.
+
+    Args:
+        video (VideoFileClip): The video to be blurred.
+        blur_size (int, optional): The size of the blur. Defaults to 5.
+
+    Returns:
+        VideoFileClip: The blurred video.
+    """
+    
+    # Get video frames
+    frames = []
+    for frame in video.iter_frames():
+        frames.append(frame)
+
+    # Apply Gaussian blur to each frame
+    blurred_frames = []
+    for frame in frames:
+        # blurred_frame = cv2.GaussianBlur(frame, (55, 55))
+        blurred_frame = cv2.medianBlur(frame, 55)
+        blurred_frames.append(blurred_frame)
+
+    # Create video clip from blurred frames
+    blurred_video = mp.ImageSequenceClip(blurred_frames, fps=video.fps)
+
+    # Add audio to blurred clip
+    blurred_video = blurred_video.set_audio(video.audio)
+    return video
     
 def add_image(video: VideoFileClip, logo_path: str="../data/docs/logo.png",
              x_top_left: int = None, y_top_left: int = None, scaling_factor: float = 0.25):
