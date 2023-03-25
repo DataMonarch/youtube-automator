@@ -85,7 +85,7 @@ def add_captions(video_clip: VideoFileClip, trimmed_video_srt: pd.DataFrame):
         width = int(0.8*video_width)
         # height = 0
         
-        caption_clip = mp.TextClip(text, fontsize=32, color='black', bg_color='gold', method="caption", size=(width, None), font="Arial-Bold", 
+        caption_clip = mp.TextClip(text, fontsize=13, color='white', method="caption", size=(width, None), font="Arial-Bold", 
                                    align="South", transparent=True).set_start(start_curr_caption).set_end(end_curr_caption)
         caption_clip = caption_clip.set_position(("center", 0.75*video_height))
         
@@ -123,12 +123,13 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
-    subclip = change_aspect_ratio(subclip)
-    subclip = add_image(subclip, scaling_factor=0.275)
+    # subclip = change_aspect_ratio(subclip)
+    # subclip = add_image(subclip, scaling_factor=0.275)
+    subclip = crop_to_aspect_ratio(subclip)
     # subclip = add_self_as_bg(video, subclip.size)
     # subclip = add_logo_cv2(subclip, scaling_factor=0.275)
     
-    # subclip = add_captions(subclip, trimmed_video_srt)
+    subclip = add_captions(subclip, trimmed_video_srt)
     
     # check for the existence of the output directory
     
@@ -139,7 +140,8 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     output_path = os.path.join(output_dir, file_name + ".mp4")  
     
     # extract the trimmed video and preserve the audio
-    subclip.write_videofile(output_path, audio=True, audio_codec="aac", codec="libx264", preset="ultrafast", threads=4, verbose=False)
+    subclip.write_videofile(output_path, audio=True, audio_codec="aac", 
+                            codec="libx264", threads=4, verbose=False)
     
     # save the srt file in the output directory
     csv_filename = os.path.join(output_dir, file_name + ".csv")
