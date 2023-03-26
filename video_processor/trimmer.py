@@ -7,7 +7,7 @@ import moviepy.editor as mp
 from moviepy.video.io.VideoFileClip import VideoFileClip
 # from moviepy.video.fx.all import GaussianBlur
 from moviepy.video.compositing.CompositeVideoClip import clips_array
-from editor import change_aspect_ratio, add_image, add_self_as_bg, crop_to_aspect_ratio, add_gaussian_blur
+from .editor import change_aspect_ratio, add_image, add_self_as_bg, crop_to_aspect_ratio, add_gaussian_blur
 import cv2
 
 def time_stamp_to_sec(time_stamp: str) -> float:
@@ -123,9 +123,9 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
 
     # set the start and end time
     subclip = video.subclip(start_time, end_time)
-    # subclip = change_aspect_ratio(subclip)
-    # subclip = add_image(subclip, scaling_factor=0.275)
-    subclip = crop_to_aspect_ratio(subclip)
+    subclip = change_aspect_ratio(subclip)
+    subclip = add_image(subclip, scaling_factor=0.275)
+    # subclip = crop_to_aspect_ratio(subclip)
     # subclip = add_self_as_bg(video, subclip.size)
     # subclip = add_logo_cv2(subclip, scaling_factor=0.275)
     
@@ -150,5 +150,5 @@ def get_video_clip(video_id: str, start_time: str=None, end_time: str=None):
     print(f">>> A new video clip is created: {output_path}")
     
     
-get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
+# get_video_clip("QIz15aJR3Mw", start_time = "4.14", end_time="5.05")
 
